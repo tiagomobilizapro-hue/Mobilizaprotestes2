@@ -52,3 +52,25 @@ MobilizaProDemoData.clear()
 ```
 
 Esses dados existem somente no `github.io`; não gravam no MySQL real.
+
+## Revisão 1.17 — gráficos e filtros
+
+Esta revisão adiciona o arquivo:
+
+```text
+assets/js/30-graficos-filtros-3d-20260708.js
+```
+
+O Pipeline passa a usar uma rosca 3D maior e menos achatada. O gráfico também exibe o filtro ativo e recalcula quando o filtro de Obra é alterado.
+
+A massa de dados demo foi atualizada. Se o navegador mantiver dados antigos, execute no Console:
+
+```javascript
+MobilizaProDemoData.reload()
+```
+
+Para forçar atualização visual dos gráficos filtráveis:
+
+```javascript
+MobilizaProGraphFilters.refresh()
+```

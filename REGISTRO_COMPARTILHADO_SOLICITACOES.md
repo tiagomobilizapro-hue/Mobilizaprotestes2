@@ -83,6 +83,20 @@ Objetivo: garantir que as solicitações feitas por Ricardo e Tiago fiquem visí
 - `CHANGELOG.md`
 - `RELATORIO_AJUSTE_VISUAL_HOSTINGER_20260708.md`
 
+### 2026-07-08 — Ricardo
+
+**Solicitação:** entregar a próxima revisão corrigindo o visual do gráfico 3D do Pipeline, aproximando-o da prévia aprovada, e garantindo que os gráficos alterem conforme os filtros realizados nas telas.
+
+**Status:** executado na versão 1.17 para GitHub Pages.
+
+**Arquivos relacionados:**
+
+- `assets/js/30-graficos-filtros-3d-20260708.js`
+- `assets/js/00-github-pages-demo-data-seed.js`
+- `assets/js/01-github-pages-demo-data-runtime.js`
+- `index.html`
+- `RELATORIO_REVISAO_117_GRAFICOS_FILTROS.md`
+
 ## Como usar este registro
 
 Antes de instalar ou repassar uma nova versão:

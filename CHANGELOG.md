@@ -1,3 +1,14 @@
+# CHANGELOG - MobilizaPro 1.17
+
+## 2026-07-08 - Revisão de gráficos e filtros no GitHub Pages
+
+- Refeito o gráfico 3D do Pipeline para ficar maior, menos achatado e mais próximo da prévia aprovada.
+- Mantidas as cores verde para vagas sem declínio e vermelho para vagas declinadas.
+- O gráfico do Pipeline agora exibe o filtro ativo e recalcula explicitamente conforme o filtro de Obra.
+- Adicionada camada `assets/js/30-graficos-filtros-3d-20260708.js`.
+- Massa demonstrativa do GitHub Pages atualizada para permitir avaliação visual por obra e com percentuais mais claros.
+- Sem alteração em PHP, MySQL ou configuração da Hostinger.
+
 # CHANGELOG - MobilizaPro 1.12
 
 ## 2026-07-07 - Salvamento multiusuario garantido

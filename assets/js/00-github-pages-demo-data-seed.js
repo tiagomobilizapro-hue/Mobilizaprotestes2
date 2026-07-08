@@ -9,7 +9,7 @@
 
   var STATE_KEY = 'mobilizaprp-state-v3';
   var VERSION_KEY = 'mobilizapro-github-pages-demo-data-version';
-  var DEMO_VERSION = '20260708-demo-graficos-v1';
+  var DEMO_VERSION = '20260708-demo-graficos-v2-filtros';
 
   function parseState() {
     try { return JSON.parse(localStorage.getItem(STATE_KEY) || '{}') || {}; }
@@ -219,6 +219,74 @@
           aso_planned: '2026-07-10',
           admitted: '',
           trainings: []
+        },
+        {
+          id: 11,
+          name: 'PAULO NOGUEIRA',
+          cpf: '32165498700',
+          phone: '31999990011',
+          city: 'BELO HORIZONTE',
+          state: 'MG',
+          func: 'AJUDANTE DE CIVIL',
+          rm: '1024',
+          digital_obra: 'M.400',
+          recruited: '2026-07-02',
+          aso_planned: '2026-07-04',
+          admitted: '',
+          declined_date: '2026-07-04',
+          declined_reason: 'Candidato recusou a proposta antes da mobilização.',
+          trainings: []
+        },
+        {
+          id: 12,
+          name: 'SANDRA DIAS',
+          cpf: '45678912300',
+          phone: '31999990012',
+          city: 'CONTAGEM',
+          state: 'MG',
+          func: 'AJUDANTE DE CIVIL',
+          rm: '1030',
+          digital_obra: 'M.400',
+          recruited: '2026-07-05',
+          aso_planned: '2026-07-07',
+          admitted: '',
+          declined_date: '2026-07-07',
+          declined_reason: 'Não apresentou documentação no prazo.',
+          trainings: []
+        },
+        {
+          id: 13,
+          name: 'EDSON FREITAS',
+          cpf: '74185296300',
+          phone: '31999990013',
+          city: 'NOVA LIMA',
+          state: 'MG',
+          func: 'TÉCNICO DE SEGURANÇA',
+          rm: '1028',
+          digital_obra: 'M.400',
+          recruited: '2026-07-06',
+          aso_planned: '2026-07-08',
+          admitted: '',
+          declined_date: '2026-07-08',
+          declined_reason: 'Reprovado em etapa documental de pré-mobilização.',
+          trainings: []
+        },
+        {
+          id: 14,
+          name: 'VITOR HUGO',
+          cpf: '85296374100',
+          phone: '31999990014',
+          city: 'SABARÁ',
+          state: 'MG',
+          func: 'ALMOXARIFE',
+          rm: '1032',
+          digital_obra: 'M.401',
+          recruited: '2026-07-07',
+          aso_planned: '2026-07-09',
+          admitted: '',
+          declined_date: '2026-07-09',
+          declined_reason: 'Desistência registrada após convocação.',
+          trainings: []
         }
       ],
       solicitations: [
@@ -238,7 +306,9 @@
 
   function seed(force) {
     var current = parseState();
-    if (!force && hasOperationalRecords(current)) return false;
+    var currentVersion = '';
+    try { currentVersion = localStorage.getItem(VERSION_KEY) || ''; } catch (e) {}
+    if (!force && hasOperationalRecords(current) && currentVersion === DEMO_VERSION) return false;
     try {
       localStorage.setItem(STATE_KEY, JSON.stringify(demoState()));
       localStorage.setItem(VERSION_KEY, DEMO_VERSION);

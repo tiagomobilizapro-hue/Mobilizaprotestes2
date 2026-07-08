@@ -16,7 +16,11 @@
     7: { recruiter_name: 'RICARDO', recruited_by_name: 'RICARDO', recruiter_registered_at: '2026-07-06', aso_marcado: true, aso_alerta: true, aso_marcado_em: '2026-07-08', aso_status: 'PENDENTE' },
     8: { recruiter_name: 'TIAGO', recruited_by_name: 'TIAGO', recruiter_registered_at: '2026-07-06', aso_status: 'DECLINADO' },
     9: { recruiter_name: 'TIAGO', recruited_by_name: 'TIAGO', recruiter_registered_at: '2026-07-07', aso_status: 'CONCLUIDO' },
-    10: { recruiter_name: 'RICARDO', recruited_by_name: 'RICARDO', recruiter_registered_at: '2026-07-08', aso_marcado: true, aso_alerta: true, aso_marcado_em: '2026-07-08', aso_status: 'PENDENTE' }
+    10: { recruiter_name: 'RICARDO', recruited_by_name: 'RICARDO', recruiter_registered_at: '2026-07-08', aso_marcado: true, aso_alerta: true, aso_marcado_em: '2026-07-08', aso_status: 'PENDENTE' },
+    11: { recruiter_name: 'RICARDO', recruited_by_name: 'RICARDO', recruiter_registered_at: '2026-07-02', aso_status: 'DECLINADO' },
+    12: { recruiter_name: 'TIAGO', recruited_by_name: 'TIAGO', recruiter_registered_at: '2026-07-05', aso_status: 'DECLINADO' },
+    13: { recruiter_name: 'RICARDO', recruited_by_name: 'RICARDO', recruiter_registered_at: '2026-07-06', aso_status: 'DECLINADO' },
+    14: { recruiter_name: 'TIAGO', recruited_by_name: 'TIAGO', recruiter_registered_at: '2026-07-07', aso_status: 'DECLINADO' }
   };
 
   function getCandidates() { try { return Array.isArray(CANDIDATES) ? CANDIDATES : []; } catch (e) { return []; } }
