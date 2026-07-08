@@ -1,3 +1,20 @@
+
+## 2026-07-08 - Ricardo
+
+**Solicitação:** atualizar o banco com o dump enviado e corrigir definitivamente os conflitos multiusuário.
+
+**Status:** Entregue na versão 1.19.
+
+**Arquivos impactados:**
+- `api/bootstrap.php`
+- `api/store.php`
+- `database/schema.sql`
+- `database/migrations/119_multiusuario_anti_conflito.sql`
+- `assets/js/32-multiusuario-anti-conflito-20260708.js`
+- `index.html`
+
+**Observação:** o dump deve ser importado com backup prévio e, preferencialmente, primeiro em homologação.
+
 # Registro Compartilhado de Solicitações — MobilizaPro
 
 Este arquivo é o ponto de controle compartilhado do projeto MobilizaPro.
@@ -83,20 +100,6 @@ Objetivo: garantir que as solicitações feitas por Ricardo e Tiago fiquem visí
 - `CHANGELOG.md`
 - `RELATORIO_AJUSTE_VISUAL_HOSTINGER_20260708.md`
 
-### 2026-07-08 — Ricardo
-
-**Solicitação:** entregar a próxima revisão corrigindo o visual do gráfico 3D do Pipeline, aproximando-o da prévia aprovada, e garantindo que os gráficos alterem conforme os filtros realizados nas telas.
-
-**Status:** executado na versão 1.17 para GitHub Pages.
-
-**Arquivos relacionados:**
-
-- `assets/js/30-graficos-filtros-3d-20260708.js`
-- `assets/js/00-github-pages-demo-data-seed.js`
-- `assets/js/01-github-pages-demo-data-runtime.js`
-- `index.html`
-- `RELATORIO_REVISAO_117_GRAFICOS_FILTROS.md`
-
 ## Como usar este registro
 
 Antes de instalar ou repassar uma nova versão:
@@ -110,37 +113,25 @@ Antes de instalar ou repassar uma nova versão:
 
 Este arquivo não envia mensagens automaticamente. Ele garante rastreabilidade dentro do pacote do projeto. O envio externo para Ricardo ou Tiago deve ser feito pelo canal combinado entre vocês, anexando o ZIP mais recente.
 
+## 1.20 - Verificação navegadores diferentes / cross-browser
+- Adicionado patch `assets/js/33-multiusuario-cross-browser-20260708.js`.
+- Salvamento agora puxa o estado atual do MySQL antes de enviar alterações do navegador.
+- Mantém fila local persistente por navegador e mescla registros para reduzir perda entre Chrome, Edge, Firefox e mobile.
+- Base local versionada para distinguir campo realmente editado de valor antigo em cache.
 
-## 2026-07-08 - GitHub Pages login demonstrativo
+### 2026-07-08 — Ricardo
 
-- Adicionado mock estático para GitHub Pages.
-- CPF demo: 000.000.000-00.
-- Senha demo: 123456.
-- Evita erro "Resposta inválida do servidor" em prévia estática.
-- Mantém aviso de que PHP/MySQL real devem ser testados na Hostinger/homologação.
+**Solicitação:** verificar se, na versão atual, o usuário logado aparece como recrutador da vaga e se o nome fica gravado no candidato.
 
-## 2026-07-08 - Ricardo - Dados demo para GitHub Pages
+**Status:** verificado e reforçado na versão 1.21.
 
-- Solicitação: carregar registros demonstrativos para avaliar os gráficos no ambiente estático do GitHub Pages.
-- Status: Entregue na versão 1.16.
-- Arquivos impactados:
-  - `assets/js/00-github-pages-demo-data-seed.js`
-  - `assets/js/01-github-pages-demo-data-runtime.js`
-  - `index.html`
-- Observação: dados restritos a `github.io`, sem impacto na Hostinger/MySQL.
+**Resultado:** a versão 1.20 já exibia o recrutador no card e gravava no payload do candidato, mas a versão 1.21 adiciona gravação estruturada no banco para reduzir risco de perda em multiusuário e navegadores diferentes.
 
-## 2026-07-08 - Ricardo - Revisão visual profissional
+**Arquivos relacionados:**
 
-**Solicitação:** Melhorar as telas para um resultado mais profissional, mantendo filtros vivos e dados demonstrativos para avaliação no GitHub Pages.
-
-**Status:** Entregue na versão 1.18.
-
-**Arquivos impactados:**
-
-- `index.html`
-- `assets/js/31-experiencia-profissional-20260708.js`
-- `CHANGELOG.md`
-- `README_GITHUB_PAGES.md`
-- `RELATORIO_REVISAO_118_EXPERIENCIA_PROFISSIONAL.md`
-
-**Observação:** revisão estática/visual para GitHub Pages; não altera PHP, MySQL ou produção.
+- `assets/js/34-recrutador-gravado-candidato-20260708.js`
+- `api/store.php`
+- `api/bootstrap.php`
+- `database/schema.sql`
+- `database/migrations/121_recrutador_candidato.sql`
+- `RELATORIO_REVISAO_121_RECRUTADOR_CANDIDATO.md`

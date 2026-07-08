@@ -1,13 +1,12 @@
-# CHANGELOG - MobilizaPro 1.17
 
-## 2026-07-08 - Revisão de gráficos e filtros no GitHub Pages
+## 1.19 - Banco 80726 + Anti-Conflito Multiusuário
 
-- Refeito o gráfico 3D do Pipeline para ficar maior, menos achatado e mais próximo da prévia aprovada.
-- Mantidas as cores verde para vagas sem declínio e vermelho para vagas declinadas.
-- O gráfico do Pipeline agora exibe o filtro ativo e recalcula explicitamente conforme o filtro de Obra.
-- Adicionada camada `assets/js/30-graficos-filtros-3d-20260708.js`.
-- Massa demonstrativa do GitHub Pages atualizada para permitir avaliação visual por obra e com percentuais mais claros.
-- Sem alteração em PHP, MySQL ou configuração da Hostinger.
+- Preparado para uso com dump SQL enviado em 08/07/2026.
+- Adicionada camada anti-conflito para múltiplos usuários.
+- Novos identificadores estáveis `client_uid` para candidatos.
+- Conflito 409 agora faz pull do MySQL, mescla estado local e reenvia sem apagar registros do outro usuário.
+- Adicionada migração `database/migrations/119_multiusuario_anti_conflito.sql`.
+- Nenhuma alteração em `config/config.php` além do pacote-base já existente.
 
 # CHANGELOG - MobilizaPro 1.12
 
@@ -169,37 +168,17 @@
 - Atualizada a versão exibida em `config/config.php` e `config/config.example.php` para `1.13 Ajuste Visual Hostinger`.
 - Mantidas as camadas anteriores de Curva S, regras operacionais e salvamento multiusuário.
 
-## 1.14 - Correção visual GitHub Pages
+## 1.20 - Verificação navegadores diferentes / cross-browser
+- Adicionado patch `assets/js/33-multiusuario-cross-browser-20260708.js`.
+- Salvamento agora puxa o estado atual do MySQL antes de enviar alterações do navegador.
+- Mantém fila local persistente por navegador e mescla registros para reduzir perda entre Chrome, Edge, Firefox e mobile.
+- Base local versionada para distinguir campo realmente editado de valor antigo em cache.
 
-- Adicionado pacote estático próprio para GitHub Pages.
-- Adicionado `.nojekyll`.
-- Corrigido logo remoto quebrado para logo local.
-- Adicionado `assets/css/08-github-pages-visual-fix.css` para restaurar contraste escuro em ambiente estático.
-- Adicionado `assets/js/29-github-pages-static-guard.js` para indicação de prévia estática.
-- Removidos arquivos PHP/config do pacote de GitHub Pages para evitar exposição pública.
-
-
-## 2026-07-08 - GitHub Pages login demonstrativo
-
-- Adicionado mock estático para GitHub Pages.
-- CPF demo: 000.000.000-00.
-- Senha demo: 123456.
-- Evita erro "Resposta inválida do servidor" em prévia estática.
-- Mantém aviso de que PHP/MySQL real devem ser testados na Hostinger/homologação.
-
-## 1.16 - GitHub Pages com dados demonstrativos para gráficos
-
-- Adicionado carregamento automático de massa demo no GitHub Pages quando não houver registros.
-- Incluídos candidatos, solicitações M.O., mobilizados, declinados, ASO pendente e obras M.400/M.401/M.402/M.403.
-- Adicionados bindings para que patches visuais leiam `window.CANDIDATES` e `window.SOLICITATIONS` corretamente no ambiente estático.
-- Dados são carregados apenas em domínio `github.io`; Hostinger e MySQL real não são afetados.
-
-## 1.18 - Experiência profissional / Executive UI (2026-07-08)
-
-- Adicionada camada premium de experiência visual para GitHub Pages.
-- Redesenhado o Dashboard como Painel Executivo / Command Center.
-- Redesenhado o Pipeline com rosca 3D maior, funil operacional, cards de recrutamento e leadtime.
-- Redesenhada a tela Medicina / ASO em cards responsivos, evitando estouro de justificativa.
-- Mantidos filtros vivos por obra nos gráficos e indicadores.
-- Incluído novo patch incremental: `assets/js/31-experiencia-profissional-20260708.js`.
-- Sem alteração de PHP, MySQL, config.php ou dados reais de produção.
+## 1.21 - Recrutador gravado no candidato
+- Verificada a versão 1.20: o recrutador já era exibido no card e salvo dentro do payload JSON do candidato quando criado pelo fluxo novo.
+- Reforçada a persistência para evitar perda do recrutador em salvamentos multiusuário/cross-browser.
+- Adicionadas colunas estruturadas no MySQL: `candidatos.recrutador_nome` e `candidatos.recrutador_cpf`.
+- `api/store.php` agora preserva o recrutador já gravado quando um navegador antigo salva payload sem esse campo.
+- Em novos candidatos, se o navegador não mandar o recrutador, o backend grava o usuário logado como recrutador.
+- Adicionado patch frontend `assets/js/34-recrutador-gravado-candidato-20260708.js` carregado por último.
+- Incluída migração `database/migrations/121_recrutador_candidato.sql`.

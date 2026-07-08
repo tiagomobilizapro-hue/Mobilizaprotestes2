@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS solicitacoes_mo (
   cancel_reason VARCHAR(500) NULL,
   canceled_at VARCHAR(30) NULL,
   payload JSON NULL,
+  payload_hash CHAR(40) NULL,
   criado_por VARCHAR(11) NULL,
   atualizado_por VARCHAR(11) NULL,
   criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -100,6 +101,7 @@ CREATE TABLE IF NOT EXISTS solicitacoes_mo (
 CREATE TABLE IF NOT EXISTS candidatos (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   legacy_id INT UNSIGNED NULL,
+  client_uid VARCHAR(64) NULL,
   nome VARCHAR(140) NOT NULL,
   cpf VARCHAR(11) NULL,
   telefone VARCHAR(20) NULL,
@@ -109,6 +111,8 @@ CREATE TABLE IF NOT EXISTS candidatos (
   rm VARCHAR(24) NULL,
   digital_obra VARCHAR(40) NULL,
   recrutado_em DATE NULL,
+  recrutador_nome VARCHAR(120) NULL,
+  recrutador_cpf VARCHAR(11) NULL,
   aso_previsto DATE NULL,
   aso_marcado_em DATE NULL,
   aso_alerta TINYINT(1) NOT NULL DEFAULT 0,
@@ -128,13 +132,16 @@ CREATE TABLE IF NOT EXISTS candidatos (
   declinado_em DATE NULL,
   motivo_declinio VARCHAR(240) NULL,
   payload JSON NULL,
+  payload_hash CHAR(40) NULL,
   criado_por VARCHAR(11) NULL,
   atualizado_por VARCHAR(11) NULL,
   criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   ativo TINYINT(1) NOT NULL DEFAULT 1,
   excluido_em TIMESTAMP NULL,
-  UNIQUE KEY uk_candidatos_legacy (legacy_id)
+  UNIQUE KEY uk_candidatos_legacy (legacy_id),
+  UNIQUE KEY uk_candidatos_client_uid (client_uid),
+  INDEX idx_candidatos_cpf_ativo (cpf, ativo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS training_matrix_store (

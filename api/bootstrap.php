@@ -152,6 +152,24 @@ function mobi_add_columns(PDO $pdo, string $table, array $columns, array &$actio
     }
 }
 
+function mobi_index_exists(PDO $pdo, string $table, string $index): bool
+{
+    $stmt = $pdo->prepare('SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema = DATABASE() AND table_name = ? AND index_name = ?');
+    $stmt->execute([$table, $index]);
+    return (int) $stmt->fetchColumn() > 0;
+}
+
+function mobi_add_index(PDO $pdo, string $table, string $index, string $definition, array &$actions, array &$warnings): void
+{
+    if (mobi_index_exists($pdo, $table, $index)) return;
+    try {
+        $pdo->exec('ALTER TABLE ' . $table . ' ADD ' . $definition);
+        $actions[] = 'Índice ' . $table . '.' . $index . ': criado.';
+    } catch (Throwable $error) {
+        $warnings[] = 'Índice ' . $table . '.' . $index . ' não foi criado: ' . $error->getMessage();
+    }
+}
+
 function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
 {
     static $completed = false;
@@ -326,6 +344,7 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
         cancel_reason VARCHAR(500) NULL,
         canceled_at VARCHAR(30) NULL,
         payload JSON NULL,
+        payload_hash CHAR(40) NULL,
         criado_por VARCHAR(11) NULL,
         atualizado_por VARCHAR(11) NULL,
         criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -343,6 +362,7 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
     mobi_create_table($pdo, 'candidatos', "CREATE TABLE candidatos (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
         legacy_id INT UNSIGNED NULL,
+        client_uid VARCHAR(64) NULL,
         nome VARCHAR(140) NOT NULL,
         cpf VARCHAR(11) NULL,
         telefone VARCHAR(20) NULL,
@@ -352,6 +372,8 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
         rm VARCHAR(24) NULL,
         digital_obra VARCHAR(40) NULL,
         recrutado_em DATE NULL,
+        recrutador_nome VARCHAR(120) NULL,
+        recrutador_cpf VARCHAR(11) NULL,
         aso_previsto DATE NULL,
         aso_marcado_em DATE NULL,
         aso_alerta TINYINT(1) NOT NULL DEFAULT 0,
@@ -371,20 +393,42 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
         declinado_em DATE NULL,
         motivo_declinio VARCHAR(240) NULL,
         payload JSON NULL,
+        payload_hash CHAR(40) NULL,
         criado_por VARCHAR(11) NULL,
         atualizado_por VARCHAR(11) NULL,
         criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
         atualizado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         ativo TINYINT(1) NOT NULL DEFAULT 1,
         excluido_em TIMESTAMP NULL,
-        UNIQUE KEY uk_candidatos_legacy (legacy_id)
+        UNIQUE KEY uk_candidatos_legacy (legacy_id),
+        UNIQUE KEY uk_candidatos_client_uid (client_uid),
+        INDEX idx_candidatos_cpf_ativo (cpf, ativo)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
     mobi_add_columns($pdo, 'candidatos', [
+        'client_uid' => 'VARCHAR(64) NULL',
+        'payload_hash' => 'CHAR(40) NULL',
+        'recrutador_nome' => 'VARCHAR(120) NULL',
+        'recrutador_cpf' => 'VARCHAR(11) NULL',
         'aso_marcado_em' => 'DATE NULL',
         'aso_alerta' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'ativo' => 'TINYINT(1) NOT NULL DEFAULT 1',
         'excluido_em' => 'TIMESTAMP NULL',
     ], $actions);
+    try {
+        $pdo->exec("UPDATE candidatos SET client_uid = CONCAT('legacy-', COALESCE(legacy_id, id)) WHERE client_uid IS NULL OR client_uid = ''");
+        $actions[] = 'candidatos.client_uid: identificadores estáveis preenchidos nos registros existentes.';
+    } catch (Throwable $error) {
+        $warnings[] = 'Backfill de candidatos.client_uid não executado: ' . $error->getMessage();
+    }
+    try {
+        $pdo->exec("UPDATE candidatos SET recrutador_nome = COALESCE(NULLIF(JSON_UNQUOTE(JSON_EXTRACT(payload, '$.recruiter_name')), ''), NULLIF(JSON_UNQUOTE(JSON_EXTRACT(payload, '$.recruited_by_name')), '')) WHERE (recrutador_nome IS NULL OR recrutador_nome = '') AND payload IS NOT NULL AND (JSON_EXTRACT(payload, '$.recruiter_name') IS NOT NULL OR JSON_EXTRACT(payload, '$.recruited_by_name') IS NOT NULL)");
+        $pdo->exec("UPDATE candidatos SET recrutador_cpf = COALESCE(NULLIF(JSON_UNQUOTE(JSON_EXTRACT(payload, '$.recruiter_cpf')), ''), NULLIF(JSON_UNQUOTE(JSON_EXTRACT(payload, '$.recruited_by_cpf')), '')) WHERE (recrutador_cpf IS NULL OR recrutador_cpf = '') AND payload IS NOT NULL AND (JSON_EXTRACT(payload, '$.recruiter_cpf') IS NOT NULL OR JSON_EXTRACT(payload, '$.recruited_by_cpf') IS NOT NULL)");
+        $actions[] = 'candidatos.recrutador: backfill conservador a partir do payload existente.';
+    } catch (Throwable $error) {
+        $warnings[] = 'Backfill de recrutador não executado: ' . $error->getMessage();
+    }
+    mobi_add_index($pdo, 'candidatos', 'uk_candidatos_client_uid', 'UNIQUE KEY uk_candidatos_client_uid (client_uid)', $actions, $warnings);
+    mobi_add_index($pdo, 'candidatos', 'idx_candidatos_cpf_ativo', 'INDEX idx_candidatos_cpf_ativo (cpf, ativo)', $actions, $warnings);
 
     mobi_create_table($pdo, 'training_matrix_store', "CREATE TABLE training_matrix_store (
         id TINYINT UNSIGNED NOT NULL PRIMARY KEY DEFAULT 1,
