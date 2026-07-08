@@ -193,3 +193,13 @@
 - Incluídos candidatos, solicitações M.O., mobilizados, declinados, ASO pendente e obras M.400/M.401/M.402/M.403.
 - Adicionados bindings para que patches visuais leiam `window.CANDIDATES` e `window.SOLICITATIONS` corretamente no ambiente estático.
 - Dados são carregados apenas em domínio `github.io`; Hostinger e MySQL real não são afetados.
+
+## 1.18 - Experiência profissional / Executive UI (2026-07-08)
+
+- Adicionada camada premium de experiência visual para GitHub Pages.
+- Redesenhado o Dashboard como Painel Executivo / Command Center.
+- Redesenhado o Pipeline com rosca 3D maior, funil operacional, cards de recrutamento e leadtime.
+- Redesenhada a tela Medicina / ASO em cards responsivos, evitando estouro de justificativa.
+- Mantidos filtros vivos por obra nos gráficos e indicadores.
+- Incluído novo patch incremental: `assets/js/31-experiencia-profissional-20260708.js`.
+- Sem alteração de PHP, MySQL, config.php ou dados reais de produção.

@@ -74,3 +74,15 @@ Para forçar atualização visual dos gráficos filtráveis:
 ```javascript
 MobilizaProGraphFilters.refresh()
 ```
+
+## Versão 1.18 - experiência profissional
+
+Esta versão adiciona uma camada visual avançada para avaliação estática no GitHub Pages. O login continua demonstrativo, usando CPF `000.000.000-00` e senha `123456`.
+
+Telas destacadas para avaliação:
+
+1. Dashboard: Painel Executivo / Command Center.
+2. Pipeline: gráfico 3D, funil operacional, cards de recrutamento e leadtime.
+3. Medicina / ASO: cards responsivos com justificativa contida no layout.
+
+A versão 1.18 não executa PHP nem MySQL no GitHub Pages. O teste de banco deve ser feito no ambiente de homologação da Hostinger.

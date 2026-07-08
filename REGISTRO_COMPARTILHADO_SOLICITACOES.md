@@ -128,3 +128,19 @@ Este arquivo não envia mensagens automaticamente. Ele garante rastreabilidade d
   - `assets/js/01-github-pages-demo-data-runtime.js`
   - `index.html`
 - Observação: dados restritos a `github.io`, sem impacto na Hostinger/MySQL.
+
+## 2026-07-08 - Ricardo - Revisão visual profissional
+
+**Solicitação:** Melhorar as telas para um resultado mais profissional, mantendo filtros vivos e dados demonstrativos para avaliação no GitHub Pages.
+
+**Status:** Entregue na versão 1.18.
+
+**Arquivos impactados:**
+
+- `index.html`
+- `assets/js/31-experiencia-profissional-20260708.js`
+- `CHANGELOG.md`
+- `README_GITHUB_PAGES.md`
+- `RELATORIO_REVISAO_118_EXPERIENCIA_PROFISSIONAL.md`
+
+**Observação:** revisão estática/visual para GitHub Pages; não altera PHP, MySQL ou produção.

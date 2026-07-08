@@ -1,0 +1,123 @@
+/* MobilizaPRO - correção visual para GitHub Pages / ambiente estático
+   Objetivo: impedir tela clara/lavada quando o projeto é publicado em subpasta do GitHub Pages
+   e garantir contraste do menu, cards, inputs e matriz de treinamentos. */
+:root{
+  --mpro-bg:#07111f;
+  --mpro-bg-2:#0b1628;
+  --mpro-card:rgba(15,23,42,.88);
+  --mpro-card-2:rgba(17,32,52,.92);
+  --mpro-line:rgba(96,165,250,.20);
+  --mpro-line-2:rgba(96,165,250,.36);
+  --mpro-text:#e5eefb;
+  --mpro-soft:#cbdcf2;
+  --mpro-muted:#8aa4c7;
+  --mpro-blue:#60a5fa;
+  --mpro-green:#22c55e;
+  --mpro-red:#ef4444;
+}
+html,html.dark,body{
+  min-height:100%;
+  background:var(--mpro-bg)!important;
+  color:var(--mpro-text)!important;
+}
+body{
+  background:
+    radial-gradient(circle at 80% 0%,rgba(96,165,250,.12),transparent 34%),
+    linear-gradient(180deg,#07111f 0%,#050b16 100%)!important;
+}
+body *{box-sizing:border-box;}
+#sidebar,.sidebar{
+  background:linear-gradient(180deg,rgba(11,22,40,.98),rgba(5,11,22,.98))!important;
+  color:var(--mpro-text)!important;
+  border-right:1px solid var(--mpro-line)!important;
+  box-shadow:18px 0 50px rgba(0,0,0,.22)!important;
+}
+#sidebar *,.sidebar *{opacity:1;}
+#sidebar img[alt="Logo"],.sidebar img[alt="Logo"]{
+  object-fit:contain!important;
+  padding:4px!important;
+  background:rgba(96,165,250,.10)!important;
+  border:1px solid rgba(96,165,250,.28)!important;
+}
+#sidebar .text-muted,.sidebar .text-muted,
+.text-muted{color:var(--mpro-muted)!important;}
+.text-on-surface,
+#content-pages,.page,.content-shell{color:var(--mpro-text)!important;}
+main,main>div,.content-shell,#content-pages{
+  background:transparent!important;
+}
+header{
+  background:rgba(15,23,42,.94)!important;
+  color:var(--mpro-text)!important;
+  border-color:var(--mpro-line)!important;
+}
+.nav-item{
+  color:var(--mpro-soft)!important;
+  border:1px solid transparent!important;
+}
+.nav-item:hover{
+  background:rgba(96,165,250,.09)!important;
+  color:#f8fbff!important;
+  border-color:rgba(96,165,250,.18)!important;
+}
+.nav-item.active{
+  background:linear-gradient(135deg,rgba(37,99,235,.95),rgba(96,165,250,.72))!important;
+  color:#fff!important;
+  box-shadow:0 14px 28px rgba(37,99,235,.18)!important;
+}
+.card,
+#page-treinamentos .card{
+  background:linear-gradient(180deg,rgba(17,32,52,.92),rgba(8,17,31,.92))!important;
+  border:1px solid var(--mpro-line)!important;
+  color:var(--mpro-text)!important;
+  box-shadow:0 16px 40px rgba(0,0,0,.18)!important;
+}
+.bg-surface-container-low,
+.bg-surface-container,
+.bg-surface-container-high,
+.bg-surface-container-highest{
+  background-color:rgba(15,23,42,.92)!important;
+}
+.border-outline-variant,.border-outline{
+  border-color:var(--mpro-line)!important;
+}
+#page-treinamentos h3,
+.text-primary{color:var(--mpro-blue)!important;}
+#page-treinamentos .func-btn{
+  color:var(--mpro-soft)!important;
+  background:rgba(8,17,31,.72)!important;
+  border:1px solid rgba(96,165,250,.20)!important;
+  border-radius:12px!important;
+}
+#page-treinamentos .func-btn.active,
+#page-treinamentos .func-btn:hover{
+  color:#fff!important;
+  background:rgba(96,165,250,.15)!important;
+  border-color:rgba(96,165,250,.55)!important;
+}
+#training-detail-container,
+#training-list{color:var(--mpro-text)!important;}
+#training-list>div{
+  background:rgba(8,17,31,.36)!important;
+  color:var(--mpro-text)!important;
+  border-color:rgba(96,165,250,.18)!important;
+}
+#training-list>div:hover{background:rgba(96,165,250,.08)!important;}
+#training-list .text-on-surface,
+#training-list .font-semibold{color:var(--mpro-text)!important;}
+.hour-input,
+input.hour-input,
+input[type="number"].hour-input{
+  background:linear-gradient(180deg,rgba(30,41,59,.96),rgba(15,23,42,.98))!important;
+  color:var(--mpro-text)!important;
+  border:1px solid rgba(96,165,250,.30)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+.btn,.badge{color:inherit;}
+.btn-primary{background:var(--mpro-blue)!important;color:#06152f!important;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:rgba(8,17,31,.95);}
+::-webkit-scrollbar-thumb{background:rgba(138,164,199,.55);border-radius:999px;border:2px solid rgba(8,17,31,.95);}
+@media(max-width:1023px){
+  #sidebar,.sidebar{box-shadow:24px 0 60px rgba(0,0,0,.45)!important;}
+}
