@@ -157,3 +157,28 @@
 - Ajustados espaçamentos, legenda e cartões de resumo para evitar sobreposição de informações.
 - Atualizada a versão exibida em `config/config.php` e `config/config.example.php` para `1.13 Ajuste Visual Hostinger`.
 - Mantidas as camadas anteriores de Curva S, regras operacionais e salvamento multiusuário.
+
+## 1.14 - Correção visual GitHub Pages
+
+- Adicionado pacote estático próprio para GitHub Pages.
+- Adicionado `.nojekyll`.
+- Corrigido logo remoto quebrado para logo local.
+- Adicionado `assets/css/08-github-pages-visual-fix.css` para restaurar contraste escuro em ambiente estático.
+- Adicionado `assets/js/29-github-pages-static-guard.js` para indicação de prévia estática.
+- Removidos arquivos PHP/config do pacote de GitHub Pages para evitar exposição pública.
+
+
+## 2026-07-08 - GitHub Pages login demonstrativo
+
+- Adicionado mock estático para GitHub Pages.
+- CPF demo: 000.000.000-00.
+- Senha demo: 123456.
+- Evita erro "Resposta inválida do servidor" em prévia estática.
+- Mantém aviso de que PHP/MySQL real devem ser testados na Hostinger/homologação.
+
+## 1.16 - GitHub Pages com dados demonstrativos para gráficos
+
+- Adicionado carregamento automático de massa demo no GitHub Pages quando não houver registros.
+- Incluídos candidatos, solicitações M.O., mobilizados, declinados, ASO pendente e obras M.400/M.401/M.402/M.403.
+- Adicionados bindings para que patches visuais leiam `window.CANDIDATES` e `window.SOLICITATIONS` corretamente no ambiente estático.
+- Dados são carregados apenas em domínio `github.io`; Hostinger e MySQL real não são afetados.

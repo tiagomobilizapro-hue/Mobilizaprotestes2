@@ -95,3 +95,22 @@ Antes de instalar ou repassar uma nova versão:
 ## Observação importante
 
 Este arquivo não envia mensagens automaticamente. Ele garante rastreabilidade dentro do pacote do projeto. O envio externo para Ricardo ou Tiago deve ser feito pelo canal combinado entre vocês, anexando o ZIP mais recente.
+
+
+## 2026-07-08 - GitHub Pages login demonstrativo
+
+- Adicionado mock estático para GitHub Pages.
+- CPF demo: 000.000.000-00.
+- Senha demo: 123456.
+- Evita erro "Resposta inválida do servidor" em prévia estática.
+- Mantém aviso de que PHP/MySQL real devem ser testados na Hostinger/homologação.
+
+## 2026-07-08 - Ricardo - Dados demo para GitHub Pages
+
+- Solicitação: carregar registros demonstrativos para avaliar os gráficos no ambiente estático do GitHub Pages.
+- Status: Entregue na versão 1.16.
+- Arquivos impactados:
+  - `assets/js/00-github-pages-demo-data-seed.js`
+  - `assets/js/01-github-pages-demo-data-runtime.js`
+  - `index.html`
+- Observação: dados restritos a `github.io`, sem impacto na Hostinger/MySQL.
