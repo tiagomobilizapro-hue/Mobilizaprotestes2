@@ -1,0 +1,25 @@
+# MobilizaPro 1.10 - pacote revisado para uso
+
+## O que foi ajustado
+
+- Removida senha real do arquivo config/config.php; informe a senha somente no ambiente de hospedagem.
+- Adicionada a pagina preflight.php para validar PHP, PDO, PDO MySQL, configuracao e conexao antes do upgrade.
+- Reforcados bloqueios .htaccess para arquivos sensiveis, backups e ZIPs.
+- Atualizada a documentacao de instalacao e upgrade com checklist de liberacao.
+- Adicionado aviso pos-upgrade para trocar a senha inicial do administrador e remover scripts de instalacao.
+
+## Fluxo recomendado
+
+1. Fazer backup do banco e dos arquivos atuais.
+2. Enviar o conteudo desta pasta para public_html.
+3. Editar config/config.php e preencher a senha do banco.
+4. Abrir /preflight.php.
+5. Abrir /database/upgrade.php.
+6. Abrir /login.php e entrar com o administrador inicial.
+7. Trocar a senha do administrador.
+8. Testar os modulos principais em outro navegador.
+9. Remover database/upgrade.php, database/install.php e preflight.php.
+
+## Observacao de seguranca
+
+Se a senha real do banco apareceu em ZIPs, prints ou mensagens, troque-a no hPanel/Hostinger e atualize config/config.php com a nova senha.

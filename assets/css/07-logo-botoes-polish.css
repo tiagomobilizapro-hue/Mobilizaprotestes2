@@ -1,0 +1,102 @@
+/* MobilizaPro 1.10 - acabamento de logo e botões principais */
+:root {
+  --mpro-action-blue: #2f80ff;
+  --mpro-action-blue-2: #1764e8;
+  --mpro-action-gold: #ffbf1a;
+}
+
+/* Remove botão de ação duplicado do topo (perto do calendário) em todas as páginas */
+#topbar-action-btn {
+  display: none !important;
+}
+
+/* Logo oficial em alta qualidade */
+.mpro-brand-lockup {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.mpro-brand-logo-img {
+  display: block;
+  width: min(220px, 100%);
+  max-height: 58px;
+  object-fit: contain;
+  object-position: left center;
+  image-rendering: auto;
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,.34));
+}
+
+#sidebar .mpro-brand-original-text {
+  display: none !important;
+}
+
+#sidebar .mpro-brand-header {
+  padding: 18px 18px 16px !important;
+}
+
+/* Botão premium para ações principais de tela */
+.mpro-action-primary,
+button[data-mpro-action="nova-rm"],
+button[data-mpro-action="nova-vaga"] {
+  min-height: 48px;
+  padding: 0 22px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(116, 169, 255, .55) !important;
+  background:
+    linear-gradient(135deg, rgba(68,145,255,1) 0%, rgba(33,108,242,1) 56%, rgba(23,82,210,1) 100%) !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  letter-spacing: .01em;
+  box-shadow: 0 16px 34px rgba(37,99,235,.34), inset 0 1px 0 rgba(255,255,255,.28) !important;
+  transform: translateY(0);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease !important;
+}
+
+.mpro-action-primary:hover,
+button[data-mpro-action="nova-rm"]:hover,
+button[data-mpro-action="nova-vaga"]:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 20px 40px rgba(37,99,235,.44), inset 0 1px 0 rgba(255,255,255,.32) !important;
+}
+
+.mpro-action-primary .material-symbols-outlined,
+button[data-mpro-action="nova-rm"] .material-symbols-outlined,
+button[data-mpro-action="nova-vaga"] .material-symbols-outlined {
+  font-size: 20px !important;
+  margin-right: 2px;
+}
+
+.mpro-action-secondary {
+  min-height: 44px;
+  padding: 0 18px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(96,165,250,.34) !important;
+  background: rgba(15,23,42,.78) !important;
+  color: #cfe3ff !important;
+  font-weight: 700 !important;
+}
+
+/* Cabeçalho profissional para Solicitação M.O. e Controle de Vagas */
+.mpro-page-commandbar {
+  align-items: center !important;
+  gap: 16px !important;
+  padding: 18px 18px !important;
+  border: 1px solid rgba(96,165,250,.18);
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(15,23,42,.82), rgba(8,17,31,.60));
+  box-shadow: 0 16px 42px rgba(0,0,0,.18);
+}
+
+.mpro-page-commandbar h3 {
+  color: #eaf3ff !important;
+}
+
+@media (max-width: 768px) {
+  .mpro-brand-logo-img { width: 185px; max-height: 48px; }
+  .mpro-page-commandbar { align-items: stretch !important; }
+  .mpro-action-primary { width: 100%; justify-content: center; }
+}

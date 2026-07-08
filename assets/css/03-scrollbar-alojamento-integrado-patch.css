@@ -1,0 +1,113 @@
+
+    :root {
+        --scrollbar-track-mobi: rgba(8, 17, 31, .72);
+        --scrollbar-track-mobi-soft: rgba(15, 23, 42, .56);
+        --scrollbar-thumb-mobi: rgba(96, 165, 250, .62);
+        --scrollbar-thumb-mobi-hover: rgba(96, 165, 250, .92);
+    }
+
+    html, body, main, .sidebar, .sidebar nav, .table-scroll, .func-sidebar-list, .flex-1.overflow-y-auto {
+        scrollbar-width: thin;
+        scrollbar-color: var(--scrollbar-thumb-mobi) var(--scrollbar-track-mobi-soft);
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--scrollbar-track-mobi);
+        border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(96,165,250,.42), rgba(96,165,250,.82));
+        border: 2px solid var(--scrollbar-track-mobi);
+        border-radius: 999px;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, rgba(96,165,250,.72), rgba(147,197,253,.98));
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: transparent;
+    }
+
+    .table-scroll {
+        border-color: rgba(96,165,250,.18) !important;
+        background: rgba(8,17,31,.30);
+        scrollbar-gutter: stable both-edges;
+        overscroll-behavior: contain;
+    }
+
+    .table-scroll thead th {
+        position: sticky;
+        top: 0;
+        z-index: 12;
+        background: #172033;
+        box-shadow: 0 1px 0 rgba(138,164,199,.22);
+    }
+
+    #page-cracha .table-scroll,
+    #page-alojamento .table-scroll {
+        max-height: calc(100vh - 405px);
+        min-height: 320px;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+    }
+
+    #page-alojamento .table-scroll table,
+    #page-cracha .table-scroll table {
+        table-layout: fixed;
+    }
+
+    #page-alojamento .dashboard-indicators-row,
+    #page-cracha .dashboard-indicators-row,
+    #page-recrutamento .dashboard-indicators-row,
+    #page-mobilizacao .dashboard-indicators-row {
+        width: 100%;
+    }
+
+    #page-alojamento .modal-input,
+    #page-cracha .modal-input,
+    #page-recrutamento .modal-input,
+    #page-mobilizacao .modal-input {
+        background: linear-gradient(180deg, rgba(15,23,42,.96), rgba(8,17,31,.92)) !important;
+        border-color: rgba(96,165,250,.30) !important;
+        color: #e5eefb !important;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    }
+
+    #page-alojamento .modal-input:focus,
+    #page-cracha .modal-input:focus,
+    #page-recrutamento .modal-input:focus,
+    #page-mobilizacao .modal-input:focus {
+        border-color: rgba(96,165,250,.82) !important;
+        box-shadow: 0 0 0 3px rgba(96,165,250,.14), inset 0 1px 0 rgba(255,255,255,.04) !important;
+    }
+
+    #page-alojamento .modal-input::placeholder,
+    #page-cracha .modal-input::placeholder,
+    #page-recrutamento .modal-input::placeholder,
+    #page-mobilizacao .modal-input::placeholder {
+        color: rgba(203,220,242,.46) !important;
+    }
+
+    @media (max-height: 760px) {
+        #page-cracha .table-scroll,
+        #page-alojamento .table-scroll {
+            max-height: calc(100vh - 360px);
+            min-height: 260px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #page-cracha .table-scroll,
+        #page-alojamento .table-scroll {
+            max-height: calc(100vh - 370px);
+            min-height: 260px;
+        }
+    }

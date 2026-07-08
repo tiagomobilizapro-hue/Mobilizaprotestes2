@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MobilizaPRO - Sistema de Mobilização</title>
+<!-- MobilizaPRO: banco operacional zerado no modelo recente enviado pelo usuário. Pessoas e solicitações removidas; estrutura, permissões, matriz, login e manutenção preservados. -->
+<!-- MobilizaPRO: base atualizada com Texto colado(8).txt em 2026-06-29. Pessoas consolidadas sem duplicidade por nome/obra. -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Outfit:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#001a42",
+                    "error-container": "#93000a",
+                    "surface-variant": "#1e293b",
+                    "tertiary-fixed": "#c5e7ff",
+                    "surface-container-high": "#172033",
+                    "inverse-surface": "#e5eefb",
+                    "on-background": "#e5eefb",
+                    "on-secondary": "#002e6a",
+                    "primary-container": "#2563eb",
+                    "on-primary-fixed-variant": "#0f2f6f",
+                    "outline": "#8aa4c7",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-error": "#690005",
+                    "on-tertiary": "#00344a",
+                    "on-primary": "#06152f",
+                    "surface-container-low": "#0f172a",
+                    "primary": "#60a5fa",
+                    "on-primary-fixed": "#041126",
+                    "tertiary": "#8fd5ff",
+                    "on-secondary-container": "#e6ecff",
+                    "inverse-on-surface": "#0b1220",
+                    "surface-dim": "#08111f",
+                    "secondary-container": "#0566d9",
+                    "secondary": "#adc6ff",
+                    "on-surface": "#e5eefb",
+                    "tertiary-fixed-dim": "#7fd0ff",
+                    "surface-bright": "#26364f",
+                    "inverse-primary": "#1d4ed8",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#004395",
+                    "surface": "#08111f",
+                    "surface-container-highest": "#1e293b",
+                    "on-primary-container": "#0b2d6b",
+                    "on-tertiary-container": "#004966",
+                    "error": "#ffb4ab",
+                    "background": "#08111f",
+                    "primary-fixed-dim": "#3b82f6",
+                    "on-tertiary-fixed-variant": "#004c6a",
+                    "surface-tint": "#3b82f6",
+                    "surface-container-lowest": "#050b16",
+                    "primary-fixed": "#bfdbfe",
+                    "on-surface-variant": "#cbdcf2",
+                    "surface-container": "#111827",
+                    "on-tertiary-fixed": "#001e2d",
+                    "tertiary-container": "#1abdff",
+                    "on-error-container": "#ffdad6",
+                    "outline-variant": "#334155"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "density-comfortable": "16px",
+                    "unit": "4px",
+                    "sidebar-width": "260px",
+                    "gutter": "16px",
+                    "density-compact": "8px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "data-mono": ["JetBrains Mono"],
+                    "headline-lg": ["Outfit"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "display-lg": ["Outfit"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Outfit"],
+                    "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                    "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<link href="assets/css/01-style-1.css" rel="stylesheet"/>
+<!-- DESIGN PRO PATCH - Painéis executivos -->
+<link href="assets/css/02-design-pro-panels.css" id="design-pro-panels" rel="stylesheet"/>
+<!-- SCROLLBAR + ALOJAMENTO LAYOUT PATCH -->
+<link href="assets/css/03-scrollbar-alojamento-integrado-patch.css" id="scrollbar-alojamento-integrado-patch" rel="stylesheet"/>
+<meta content="Hostinger MySQL online build v3 sem mensagem inicial" name="mobilizapro-build"/></head>
+<body class="min-h-screen text-on-surface">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="sidebar flex flex-col z-50 fixed inset-y-0 lg:relative lg:translate-x-0 -translate-x-full" id="sidebar">
+<div class="p-6 border-bottom border-outline-variant">
+<div class="flex items-center gap-3">
+<img alt="Logo" class="w-10 h-10 rounded-xl shadow-lg" src="https://lh3.googleusercontent.com/aida/AP1WRLsQQIdsgvZfGByejBbYW1SmCJdOktV3b4p6A3h19HZq_HDi9Cx_lhfzZDkkNtCIHM-8SLZepgJzTdpKkuBnxcss4kXWnZOgeviPCdIuoCnwJ_Ce4j3KVEEupeopLB65Nr6uiREhhR-R-8bDGN2fFBeJ2N2pOzAiJxGGW8m-Bv8FPKl0GWvSD38VL_Hn2IxpycoafXmrm7rohBRCG7vScIJt3rtYwHru8nAxEl0VNqzn_Lt_anHaLFC0lGc"/>
+<div>
+<h1 class="text-xl font-display font-black tracking-tight leading-none text-primary">MobilizaPRO</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-muted font-bold mt-1">Projeto M.400</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1"><div class="px-3 mb-2 text-[10px] font-bold uppercase text-muted tracking-widest">Principal</div>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium active" data-page="dashboard" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+            </a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="pipeline" href="#">
+<span class="material-symbols-outlined text-xl">account_tree</span> Pipeline
+            </a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="acesso" href="#">
+<span class="material-symbols-outlined text-xl">manage_accounts</span> Acesso
+            </a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="manutencao" href="#">
+<span class="material-symbols-outlined text-xl">admin_panel_settings</span> Manutenção
+            </a>
+<div class="group">
+<div class="px-3 py-2 text-[10px] font-bold uppercase text-muted tracking-widest mt-4">Pessoas</div>
+<div class="space-y-1">
+<a class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium" data-page="recrutamento" href="#">
+<span class="material-symbols-outlined text-xl">person_search</span> Recrutamento
+                    </a>
+<a class="nav-item flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium" data-page="mobilizacao" href="#">
+<span class="material-symbols-outlined text-xl">person_check</span> Mobilização
+                        <span class="material-symbols-outlined text-sm text-error alert-pulse ml-auto hidden" id="mob-alert-icon">notifications_active</span>
+</a>
+</div>
+</div>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="cracha" href="#">
+<span class="material-symbols-outlined text-xl">badge</span> Crachá
+            </a>
+<div class="px-3 mb-2 mt-6 text-[10px] font-bold uppercase text-muted tracking-widest">Operações</div>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="solicitacao" href="#">
+<span class="material-symbols-outlined text-xl">assignment_add</span> Solicitação M.O.
+            </a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="alojamento" href="#">
+<span class="material-symbols-outlined text-xl">home</span> Alojamento
+                        <span class="material-symbols-outlined text-sm text-amber-400 alert-pulse ml-auto hidden" id="alojamento-alert-icon" title="Necessidade de alojamento não tratada">warning</span>
+<span class="hidden ml-1 px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/25 text-[10px] font-bold" id="alojamento-alert-count">0</span>
+</a>
+<div class="px-3 mb-2 mt-6 text-[10px] font-bold uppercase text-muted tracking-widest">Relatórios</div>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="vagas" href="#">
+<span class="material-symbols-outlined text-xl">view_list</span> Vagas
+                <span class="ml-auto min-w-[22px] h-[22px] px-1.5 rounded-full bg-primary text-on-primary text-[10px] font-black flex items-center justify-center" id="vacancies-nav-badge">0</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="treinamentos" href="#">
+<span class="material-symbols-outlined text-xl">school</span> Matriz de Treinamentos
+            </a>
+<a class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium" data-page="matriz-recrutamento" href="#">
+<span class="material-symbols-outlined text-xl">fact_check</span> Matriz de Recrutamento
+            </a></nav>
+<div class="p-4 border-t border-outline-variant text-[11px] text-muted">
+<div class="flex items-center gap-2 mb-1">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+<span class="font-medium">Servidor Ativo</span>
+</div>
+<p class="">© Gestão de Mobilização</p>
+</div>
+<div class="sidebar-resize-handle" id="sidebar-resize-handle" title="Arraste para ajustar o menu. Duplo clique para restaurar."></div>
+<div class="sidebar-resize-hint">arraste ↔</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- Topbar -->
+<header class="h-16 border-b border-outline-variant bg-surface-container-low flex items-center justify-between px-6 z-40">
+<div class="flex items-center gap-4">
+<button class="lg:hidden p-2 hover:bg-surface-variant rounded-lg" onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="text-lg font-display font-bold text-on-surface" id="topbar-title">Matriz de Treinamentos</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:block text-right">
+<p class="text-[10px] text-muted font-bold uppercase" id="current-date-top">QUA., 24 DE JUNHO</p>
+</div>
+<button class="btn btn-primary text-xs shadow-lg" id="topbar-action-btn"><span class="material-symbols-outlined text-sm">add_circle</span> Nova Função</button>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-4 sm:p-6 scroll-smooth"><div class="content-shell">
+<div id="content-pages">
+<div class="page active" id="page-treinamentos">
+<div class="flex flex-col gap-6 animate-up">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-display font-bold text-xl text-primary">Matriz de Qualificação M.400</h3>
+<p class="text-xs text-muted">Gestão de carga horária e requisitos por função</p>
+</div>
+<div class="flex gap-2">
+<span class="badge bg-primary/10 text-primary border-primary/20">2 Funções</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-2 bg-surface-container-low p-2 rounded-xl border border-outline-variant">
+<button class="func-btn active" onclick="selectTrainingFunc('AJUDANTE DE CIVIL')">
+                        AJUDANTE DE CIVIL
+                    </button>
+<button class="func-btn" onclick="selectTrainingFunc('ELETRICISTA')">
+                        ELETRICISTA
+                    </button>
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-primary hover:bg-primary/10 transition-colors border border-dashed border-primary/40" onclick="openNewFunctionModal()">
+<span class="material-symbols-outlined text-sm">add_circle</span> Nova Função
+                </button>
+</div>
+<div id="training-detail-container">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-1 space-y-4">
+<div class="card p-6 rounded-2xl border-l-4 border-l-primary">
+<h4 class="text-[10px] font-bold uppercase text-muted tracking-widest mb-2">Resumo</h4>
+<div class="text-4xl font-display font-black text-on-surface mb-1">53h</div>
+<p class="text-xs text-muted">Estimativa: <span class="text-primary font-bold">7.6 dias</span> úteis</p>
+</div>
+<button class="w-full btn btn-danger-ghost text-xs" onclick="deleteFunction('AJUDANTE DE CIVIL')">
+<span class="material-symbols-outlined text-sm">delete_sweep</span> Remover Função
+                </button>
+</div>
+<div class="lg:col-span-2">
+<div class="card rounded-2xl overflow-hidden">
+<div class="px-6 py-2 bg-surface-container-low border-b border-outline-variant flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase text-muted tracking-widest">Treinamento</span>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold uppercase text-muted tracking-widest w-28 text-center">Obrigatório</span>
+<span class="text-[10px] font-bold uppercase text-muted tracking-widest w-16 text-center">Horas</span>
+<span class="w-10"></span>
+</div>
+</div>
+<div class="divide-y divide-outline-variant" id="training-list">
+<div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-highest group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-xl text-primary">
+                                        verified_user
+                                    </span>
+<div class="text-sm font-semibold text-on-surface">Treinamento Inicial - Básico em Segurança do trabalho - CAR</div>
+</div>
+<div class="flex items-center gap-4">
+<input class="hour-input w-16 h-8 rounded-md text-xs" onchange="updateTrainingHours('AJUDANTE DE CIVIL', 0, this.value)" type="number" value="6"/>
+<button class="p-2 rounded-lg text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-opacity" onclick="deleteTrainingFromFunc('AJUDANTE DE CIVIL', 0)">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-highest group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-xl text-primary">
+                                        verified_user
+                                    </span>
+<div class="text-sm font-semibold text-on-surface">PCRC 01 VEÍCULOS Rodoviários</div>
+</div>
+<div class="flex items-center gap-4">
+<input class="hour-input w-16 h-8 rounded-md text-xs" onchange="updateTrainingHours('AJUDANTE DE CIVIL', 1, this.value)" type="number" value="2"/>
+<button class="p-2 rounded-lg text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-opacity" onclick="deleteTrainingFromFunc('AJUDANTE DE CIVIL', 1)">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-highest group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-xl text-primary">
+                                        verified_user
+                                    </span>
+<div class="text-sm font-semibold text-on-surface">PCRC 02 Equipamentos Móveis</div>
+</div>
+<div class="flex items-center gap-4">
+<input class="hour-input w-16 h-8 rounded-md text-xs" onchange="updateTrainingHours('AJUDANTE DE CIVIL', 2, this.value)" type="number" value="2"/>
+<button class="p-2 rounded-lg text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-opacity" onclick="deleteTrainingFromFunc('AJUDANTE DE CIVIL', 2)">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-highest group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-xl text-primary">
+                                        verified_user
+                                    </span>
+<div class="text-sm font-semibold text-on-surface">NR-35 Trabalho em Altura</div>
+</div>
+<div class="flex items-center gap-4">
+<input class="hour-input w-16 h-8 rounded-md text-xs" onchange="updateTrainingHours('AJUDANTE DE CIVIL', 3, this.value)" type="number" value="8"/>
+<button class="p-2 rounded-lg text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-opacity" onclick="deleteTrainingFromFunc('AJUDANTE DE CIVIL', 3)">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+<div class="px-6 py-4 flex items-center justify-between hover:bg-surface-container-highest group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-xl text-primary">
+                                        verified_user
+                                    </span>
+<div class="text-sm font-semibold text-on-surface">NR 6 - EPI</div>
+</div>
+<div class="flex items-center gap-4">
+<input class="hour-input w-16 h-8 rounded-md text-xs" onchange="updateTrainingHours('AJUDANTE DE CIVIL', 4, this.value)" type="number" value="4"/>
+<button class="p-2 rounded-lg text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-opacity" onclick="deleteTrainingFromFunc('AJUDANTE DE CIVIL', 4)">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low border-t border-outline-variant">
+<button class="w-full btn btn-ghost text-xs border border-dashed border-outline" onclick="openAddTrainingModal('AJUDANTE DE CIVIL')">
+<span class="material-symbols-outlined text-sm">add</span> Adicionar Treinamento
+                         </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="page hidden" id="page-dashboard"></div>
+<div class="page hidden" id="page-recrutamento"></div>
+<div class="page hidden" id="page-matriz-recrutamento"></div>
+<div class="page hidden" id="page-mobilizacao"></div>
+<div class="page hidden" id="page-pipeline"></div>
+<div class="page hidden" id="page-solicitacao"></div>
+<div class="page hidden" id="page-alojamento"></div>
+<div class="page hidden" id="page-resumo"></div>
+<div class="page hidden" id="page-vagas"></div>
+<div class="page hidden" id="page-cracha"></div><div class="page hidden" id="page-acesso"></div><div class="page hidden" id="page-manutencao"></div></div></div>
+</div>
+</main>
+</div>
+<!-- Modal Overlay -->
+<div class="modal-backdrop fixed inset-0 z-[100] opacity-0 pointer-events-none transition-all duration-300 flex items-center justify-center p-4" id="modal-overlay">
+<div class="bg-surface-container-high border border-outline-variant w-full max-w-2xl rounded-2xl shadow-2xl transform scale-95 transition-all duration-300 max-h-[90vh] overflow-hidden flex flex-col" id="modal"></div>
+</div>
+<script src="assets/js/00-hostinger-cloud-storage.js?v=20260704-mysql-direct1"></script>
+<script src="assets/js/01-script-1.js?v=20260704-mysql-direct1"></script>
+<script src="assets/js/02-script-2.js?v=20260630-fullsync1"></script>
+<link href="assets/css/04-access-maintenance-style.css" id="access-maintenance-style" rel="stylesheet"/>
+<script id="access-maintenance-patch" src="assets/js/03-access-maintenance-patch.js?v=20260630-fullsync1"></script>
+<script id="access-permission-refinement" src="assets/js/04-access-permission-refinement.js?v=20260630-fullsync1"></script>
+<script id="force-login-every-open" src="assets/js/05-force-login-every-open.js?v=20260630-fullsync1"></script>
+<script id="mobilizacao-indicadores-topo-busca-1s" src="assets/js/06-mobilizacao-indicadores-topo-busca-1s.js?v=20260630-fullsync1"></script>
+<link href="assets/css/05-mobilizapro-top-css.css" id="mobilizapro-top-css" rel="stylesheet"/>
+<script id="mobilizapro-top-layer" src="assets/js/07-mobilizapro-top-layer.js?v=20260630-fullsync1"></script>
+<link href="assets/css/06-mobilizapro-functional-dashboard-style.css?v=20260701-fields1" id="mobilizapro-functional-dashboard-style" rel="stylesheet"/>
+<link href="assets/css/07-logo-botoes-polish.css?v=20260703-polish1" id="logo-botoes-polish" rel="stylesheet"/>
+<script id="mobilizapro-functional-dashboard-layer" src="assets/js/08-mobilizapro-functional-dashboard-layer.js?v=20260630-fullsync1"></script>
+<script id="mandatory-login-navigation-guard" src="assets/js/09-mandatory-login-navigation-guard.js?v=20260630-fullsync1"></script>
+<script id="universal-collaborator-edit-patch" src="assets/js/10-universal-collaborator-edit-patch.js?v=20260630-fullsync1"></script>
+<script id="save-new-person-flow-fix" src="assets/js/11-save-new-person-flow-fix.js?v=20260630-fullsync1"></script>
+<script id="mobilizacao-inverter-botoes-edicao-patch" src="assets/js/12-mobilizacao-inverter-botoes-edicao-patch.js?v=20260630-fullsync1"></script>
+<script id="access-admin-edit-menu-hidden-patch" src="assets/js/13-access-admin-edit-menu-hidden-patch.js?v=20260630-fullsync1"></script>
+<script id="menu-solicitacao-rm-dropdown-baixa-patch" src="assets/js/14-menu-solicitacao-rm-dropdown-baixa-patch.js?v=20260630-fullsync1"></script>
+<script id="logo-oficial-acesso-patch" src="assets/js/15-logo-oficial-acesso-patch.js?v=20260630-fullsync1"></script>
+<script id="login-fix-after-logo-cleanup-patch" src="assets/js/16-login-fix-after-logo-cleanup-patch.js?v=20260630-fullsync1"></script>
+<script id="login-logo-single-final-fix" src="assets/js/17-login-logo-single-final-fix.js?v=20260630-fullsync1"></script>
+<script id="hostinger-mysql-auth" src="assets/js/18-hostinger-mysql-auth.js?v=20260701-dashboard-login1"></script>
+<script id="refresh-on-navigation" src="assets/js/19-refresh-on-navigation.js?v=20260630-navrefresh1"></script>
+<script src="assets/js/20-dashboard-busca-colaborador-patch.js?v=20260701-dashboard-search2"></script>
+<script src="assets/js/21-operational-corrections.js?v=20260702-opfix1"></script>
+<script src="assets/js/22-logo-botoes-polish.js?v=20260703-polish1"></script>
+<script src="assets/js/23-ficha360-exclusao-gerencial.js?v=20260703-ficha360del1"></script>
+<script src="assets/js/24-ficha360-premium-recrutamento-delete.js?v=20260703-ficha360full1"></script>
+<script src="assets/js/25-dashboard-curva-s.js?v=20260706-curva-s1"></script>
+<script src="assets/js/26-regras-operacionais-20260707.js?v=20260707-regras1"></script>
+<script src="assets/js/27-salvamento-multiusuario-garantido.js?v=20260707-outbox1"></script>
+<script src="assets/js/28-ajuste-visual-hostinger-20260708.js?v=20260708-visual3d1"></script>
+</body></html>
