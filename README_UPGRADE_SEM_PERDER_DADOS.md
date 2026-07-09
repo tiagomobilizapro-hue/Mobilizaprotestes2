@@ -53,3 +53,8 @@ Após enviar os arquivos da v124 ao servidor, execute uma vez:
 A atualização é incremental e não apaga registros existentes. Ela reforça a matriz `permissoes_perfil`, adiciona o módulo `banca_tecnica`, prepara a tabela `homologacao_tecnica` e mantém exclusões operacionais como inativação lógica.
 
 Depois de testar, remova ou bloqueie os arquivos de instalação/upgrade do ambiente público.
+
+
+## Observação v125 — GitHub Pages
+
+Se publicado no GitHub Pages, o MobilizaPRO entra em modo **GitHub Preview**, pois o GitHub Pages não executa PHP/MySQL. Para acessar a prévia, use CPF `000.000.000-00` e senha `123456`. Para operação real multiusuário, publique na Hostinger e execute `/database/upgrade.php`.

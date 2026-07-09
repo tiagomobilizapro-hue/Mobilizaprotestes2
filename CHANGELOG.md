@@ -1,4 +1,14 @@
 
+## v125 — GitHub Pages Preview Login
+
+- Corrigido cenário em que o login não funcionava ao publicar no GitHub Pages.
+- Adicionado modo automático de prévia estática para `github.io` e `file://`.
+- Login de demonstração: CPF `000.000.000-00`, senha `123456`.
+- Dados de prévia salvos localmente no navegador, sem MySQL.
+- Produção Hostinger/PHP/MySQL preservada sem fallback inseguro.
+- Adicionado `assets/js/38-github-pages-preview-20260709.js`.
+
+
 ## 1.19 - Banco 80726 + Anti-Conflito Multiusuário
 
 - Preparado para uso com dump SQL enviado em 08/07/2026.

@@ -398,8 +398,7 @@
     var node = ensurePage('auditoria');
     if (!node) return;
     node.innerHTML = '<div class="space-y-6 animate-up">' + hero('Auditoria Operacional', 'Rastreabilidade de salvamentos, exclusões lógicas e alterações críticas.', 'history') + '<div id="mobi-pro-audit-table" class="mobi-pro-shell rounded-2xl p-8 text-center text-muted">Carregando auditoria...</div></div>';
-    fetch('api/professional.php?action=audit&limit=80', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
-      .then(function (r) { return r.json(); })
+    (window.MOBI_GITHUB_PREVIEW && window.MobilizaProGithubPreviewApi ? window.MobilizaProGithubPreviewApi.request('audit') : fetch('api/professional.php?action=audit&limit=80', { credentials: 'same-origin', headers: { 'Accept': 'application/json' } }).then(function (r) { return r.json(); }))
       .then(function (json) {
         var rows = arr(json && json.audit);
         var target = document.getElementById('mobi-pro-audit-table');

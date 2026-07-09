@@ -21,6 +21,48 @@
   var lastError = '';
   var saveQueue = Promise.resolve();
 
+
+  function isGitHubPreview() {
+    try {
+      var host = String(location.hostname || '').toLowerCase();
+      return !!(window.MOBI_GITHUB_PREVIEW || host.endsWith('.github.io') || host === 'github.io' || location.protocol === 'file:');
+    } catch (e) { return false; }
+  }
+
+  if (isGitHubPreview()) {
+    window.MOBI_GITHUB_PREVIEW = true;
+    function ensurePreviewState() {
+      var raw = native.getItem.call(localStorage, STATE_KEY);
+      if (!raw) native.setItem.call(localStorage, STATE_KEY, JSON.stringify({ trainingMatrix: [], candidates: [], solicitations: [] }));
+    }
+    function previewBadge(text) {
+      if (!document.body) return;
+      var badge = document.getElementById('mobi-save-status');
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'mobi-save-status';
+        badge.style.cssText = 'position:fixed;right:14px;bottom:12px;z-index:99999;padding:7px 11px;border-radius:999px;border:1px solid rgba(59,130,246,.45);background:rgba(59,130,246,.18);backdrop-filter:blur(8px);color:#fff;font:800 11px/1.2 system-ui,Segoe UI,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:.9;pointer-events:none;';
+        document.body.appendChild(badge);
+      }
+      badge.textContent = text || 'GitHub Preview · dados locais';
+      badge.title = 'GitHub Pages é hospedagem estática. Nesta prévia, os dados ficam apenas neste navegador.';
+    }
+    ensurePreviewState();
+    window.MobilizaProCloudStorage = {
+      pull: function (callback) { ensurePreviewState(); if (typeof callback === 'function') callback({ ok: true, preview: true, items: {} }); return Promise.resolve({ ok: true, preview: true }); },
+      pullSync: function () { ensurePreviewState(); return true; },
+      syncNow: function (callback) { ensurePreviewState(); previewBadge('GitHub Preview · salvo local'); var result = { ok: true, preview: true, token: 'github-preview' }; if (typeof callback === 'function') callback(result); return Promise.resolve(result); },
+      saveStateDirect: function (state, callback) { ensurePreviewState(); mirrorStateToLocalStorage(state || {}); previewBadge('GitHub Preview · salvo local'); var result = { ok: true, preview: true, token: 'github-preview' }; if (typeof callback === 'function') callback(result); return Promise.resolve(result); },
+      saveStateNow: function (callback) { return this.syncNow(callback); },
+      refreshScreen: function () {},
+      getToken: function () { return 'github-preview'; },
+      getLastError: function () { return ''; },
+      __githubPreview: true
+    };
+    window.addEventListener('load', function () { previewBadge('GitHub Preview · dados locais'); });
+    return;
+  }
+
   function csrf() {
     return window.MOBI_CSRF_TOKEN || (document.querySelector('meta[name="mobilizapro-csrf"]') || {}).content || '';
   }

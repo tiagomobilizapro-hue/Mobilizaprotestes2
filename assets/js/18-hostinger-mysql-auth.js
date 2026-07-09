@@ -32,7 +32,76 @@
   function esc(value) {
     return String(value ?? '').replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
   }
+
+
+  function isGitHubPreview() {
+    try {
+      var host = String(location.hostname || '').toLowerCase();
+      return !!(window.MOBI_GITHUB_PREVIEW || host.endsWith('.github.io') || host === 'github.io' || location.protocol === 'file:');
+    } catch (e) { return false; }
+  }
+
+  const PREVIEW_USERS_KEY = 'mobilizapro-github-preview-users-v125';
+  const PREVIEW_SESSION_KEY = 'mobilizapro-github-preview-current-cpf-v125';
+  function previewUsers() {
+    var users = [];
+    try { users = JSON.parse(localStorage.getItem(PREVIEW_USERS_KEY) || '[]'); } catch (e) { users = []; }
+    if (!Array.isArray(users) || !users.length) {
+      users = [{ name: 'ADMINISTRADOR GITHUB PREVIEW', cpf: '00000000000', email: 'admin@preview.local', role: 'GERENCIAL', password: '123456', active: true }];
+      try { localStorage.setItem(PREVIEW_USERS_KEY, JSON.stringify(users)); } catch (e) {}
+    }
+    return users;
+  }
+  function savePreviewUsers(users) { try { localStorage.setItem(PREVIEW_USERS_KEY, JSON.stringify(users || [])); } catch (e) {} }
+  function publicPreviewUser(u) { return u ? { name: u.name || '', cpf: cpf(u.cpf), email: u.email || '', role: u.role || 'OBRA', active: u.active !== false } : null; }
+  function previewRequest(action, data, method) {
+    window.MOBI_GITHUB_PREVIEW = true;
+    var users = previewUsers();
+    var currentCpf = '';
+    try { currentCpf = sessionStorage.getItem(PREVIEW_SESSION_KEY) || ''; } catch (e) {}
+    var current = users.find(function (u) { return cpf(u.cpf) === cpf(currentCpf) && u.active !== false; }) || null;
+    if (action === 'status') return Promise.resolve({ ok: true, configured: true, preview: true, csrf: 'github-preview' });
+    if (action === 'me') return Promise.resolve({ ok: true, user: publicPreviewUser(current), preview: true, csrf: 'github-preview' });
+    if (action === 'login') {
+      var c = cpf(data && data.cpf);
+      var p = String((data && data.password) || '');
+      var user = users.find(function (u) { return cpf(u.cpf) === c && u.active !== false && String(u.password || '') === p; });
+      if (!user) return Promise.reject(new Error('CPF ou senha inválidos. No GitHub Preview use CPF 000.000.000-00 e senha 123456.'));
+      try { sessionStorage.setItem(PREVIEW_SESSION_KEY, cpf(user.cpf)); } catch (e) {}
+      return Promise.resolve({ ok: true, user: publicPreviewUser(user), preview: true, csrf: 'github-preview' });
+    }
+    if (action === 'logout') { try { sessionStorage.removeItem(PREVIEW_SESSION_KEY); } catch (e) {} return Promise.resolve({ ok: true, preview: true, csrf: 'github-preview' }); }
+    if (!current) return Promise.reject(new Error('Faça login para continuar.'));
+    if (action === 'users') return Promise.resolve({ ok: true, users: users.map(publicPreviewUser), preview: true, csrf: 'github-preview' });
+    if (action === 'save_user') {
+      if (current.role !== 'GERENCIAL') return Promise.reject(new Error('Acesso somente para perfil Gerencial.'));
+      var c2 = cpf(data && data.cpf);
+      if (c2.length !== 11) return Promise.reject(new Error('Informe um CPF válido.'));
+      var idx = users.findIndex(function (u) { return cpf(u.cpf) === c2; });
+      var item = idx >= 0 ? Object.assign({}, users[idx]) : { cpf: c2, password: '' };
+      item.name = String((data && data.name) || item.name || '').trim().toUpperCase();
+      item.email = String((data && data.email) || item.email || '').trim().toLowerCase();
+      item.role = String((data && data.role) || item.role || 'OBRA');
+      item.active = true;
+      if (data && data.password) item.password = String(data.password);
+      if (!item.name || item.name.length < 3) return Promise.reject(new Error('Informe o nome do usuário.'));
+      if (!item.password || item.password.length < 6) return Promise.reject(new Error('A senha deve ter pelo menos 6 caracteres.'));
+      if (idx >= 0) users[idx] = item; else users.push(item);
+      savePreviewUsers(users);
+      return Promise.resolve({ ok: true, preview: true, csrf: 'github-preview' });
+    }
+    if (action === 'delete_user') {
+      if (current.role !== 'GERENCIAL') return Promise.reject(new Error('Acesso somente para perfil Gerencial.'));
+      var delCpf = cpf(data && data.cpf);
+      users.forEach(function (u) { if (cpf(u.cpf) === delCpf && delCpf !== '00000000000') u.active = false; });
+      savePreviewUsers(users);
+      return Promise.resolve({ ok: true, preview: true, csrf: 'github-preview' });
+    }
+    if (action === 'import_local_users') return Promise.resolve({ ok: true, imported: 0, preview: true, csrf: 'github-preview' });
+    return Promise.reject(new Error('Ação indisponível no GitHub Preview.'));
+  }
   async function request(action, data, method) {
+    if (isGitHubPreview()) return previewRequest(action, data, method);
     const isPost = !!(method || data);
 
     // Hostinger/PHP usa sessão de servidor para validar CSRF.
@@ -126,7 +195,8 @@
     if (!container) return;
     container.innerHTML = `<div class="max-w-xl mx-auto animate-up">
       <div class="card rounded-3xl p-7 border-l-4 border-l-primary">
-        <div class="flex items-center gap-3 mb-6"><span class="material-symbols-outlined text-primary text-4xl">verified_user</span><div><h3 class="font-display font-black text-2xl">MobilizaPro Online</h3><p class="text-xs text-muted">Login conectado ao MySQL da Hostinger.</p></div></div>
+        <div class="flex items-center gap-3 mb-6"><span class="material-symbols-outlined text-primary text-4xl">verified_user</span><div><h3 class="font-display font-black text-2xl">MobilizaPro Online</h3><p class="text-xs text-muted">${window.MOBI_GITHUB_PREVIEW ? 'Modo GitHub Preview: login local para demonstração.' : 'Login conectado ao MySQL da Hostinger.'}</p></div></div>
+        ${window.MOBI_GITHUB_PREVIEW ? '<div class="mb-4 rounded-2xl border border-blue-400/30 bg-blue-500/10 p-3 text-xs text-blue-100"><b>Prévia GitHub:</b> use CPF 000.000.000-00 e senha 123456. Dados salvos apenas neste navegador.</div>' : ''}
         <div class="space-y-4">
           <div><label class="text-[10px] font-bold uppercase text-muted block mb-1">CPF</label><input id="login-cpf" class="modal-input font-mono" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" oninput="maskCpfInput && maskCpfInput(this)" autocomplete="username"></div>
           <div><label class="text-[10px] font-bold uppercase text-muted block mb-1">Senha</label><input id="login-password" type="password" class="modal-input" placeholder="SENHA DE ACESSO" onkeydown="if(event.key==='Enter') loginAccessUser()" autocomplete="current-password"></div>

@@ -20,6 +20,9 @@
   function csrf() { return window.MOBI_CSRF_TOKEN || (document.querySelector('meta[name="mobilizapro-csrf"]') || {}).content || ''; }
 
   async function api(action, payload, method) {
+    if (window.MOBI_GITHUB_PREVIEW && window.MobilizaProGithubPreviewApi && typeof window.MobilizaProGithubPreviewApi.request === 'function') {
+      return window.MobilizaProGithubPreviewApi.request(action, payload, method);
+    }
     var isPost = (method || (payload ? 'POST' : 'GET')).toUpperCase() !== 'GET';
     if (isPost && !csrf()) await api('dashboard');
     var options = { credentials: 'same-origin', headers: { 'Accept': 'application/json' } };

@@ -12,6 +12,8 @@
 (function () {
   'use strict';
 
+  if (window.MOBI_GITHUB_PREVIEW) return;
+
   var STATE_KEY = 'mobilizaprp-state-v3';
   var BASE_KEY = 'mobilizaprp-state-v3-base-120';
   var OUTBOX_KEY = 'mobilizaprp-cross-browser-outbox-120';

@@ -11,6 +11,8 @@
 (function () {
   'use strict';
 
+  if (window.MOBI_GITHUB_PREVIEW) return;
+
   var STATE_KEY = 'mobilizaprp-state-v3';
   var API = 'api/store.php';
   var native = {

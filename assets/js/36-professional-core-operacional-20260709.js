@@ -24,6 +24,9 @@
   function jsonClone(v) { try { return JSON.parse(JSON.stringify(v)); } catch (e) { return v; } }
 
   async function api(action, payload, method) {
+    if (window.MOBI_GITHUB_PREVIEW && window.MobilizaProGithubPreviewApi && typeof window.MobilizaProGithubPreviewApi.request === 'function') {
+      return window.MobilizaProGithubPreviewApi.request(action, payload, method);
+    }
     var isPost = (method || (payload ? 'POST' : 'GET')).toUpperCase() !== 'GET';
     if (isPost && !csrf()) await api('dashboard');
     var options = { credentials: 'same-origin', headers: { 'Accept': 'application/json' } };
