@@ -394,17 +394,40 @@ if ($method === 'GET') {
 
 
 function mobi_require_fresh_state(PDO $pdo, array $input): void {
+    // v122 Professional Core:
+    // A base v120/v121 já mescla servidor + navegador antes de salvar.
+    // Portanto, divergência de token não deve bloquear a operação inteira,
+    // porque o backend usa upsert e não inativa registros ausentes no payload.
+    // O bloqueio rígido fica disponível somente quando strict_conflict=true.
+    $GLOBALS['mobi_last_state_conflict'] = null;
     $base = trim((string)($input['base_token'] ?? ''));
     if ($base === '') return;
     $current = mobi_state_token($pdo);
     if (!hash_equals($current, $base)) {
-        mobi_json([
-            'ok' => false,
-            'conflict' => true,
-            'message' => 'Este cadastro foi alterado por outro usuário. Atualize a tela antes de salvar para evitar sobrescrever informações.',
-            'token' => $current
-        ], 409);
+        $mergeSafe = !empty($input['merge_safe']) || !empty($input['allow_merge']) || !empty($input['cross_browser_merge']);
+        $detail = [
+            'base_token' => $base,
+            'current_token' => $current,
+            'resolved_by' => $mergeSafe ? 'merge_upsert_professional_core' : 'blocked_without_merge_safe',
+            'merge_safe' => $mergeSafe,
+            'strict' => !empty($input['strict_conflict'])
+        ];
+        $GLOBALS['mobi_last_state_conflict'] = $detail;
+        if (!$mergeSafe || !empty($input['strict_conflict'])) {
+            mobi_json([
+                'ok' => false,
+                'conflict' => true,
+                'message' => 'Este cadastro foi alterado por outro usuário. Atualize a tela antes de salvar para evitar sobrescrever informações.',
+                'token' => $current
+            ], 409);
+        }
     }
+}
+
+function mobi_state_conflict_detail(): ?array {
+    return isset($GLOBALS['mobi_last_state_conflict']) && is_array($GLOBALS['mobi_last_state_conflict'])
+        ? $GLOBALS['mobi_last_state_conflict']
+        : null;
 }
 
 $action = $_GET['action'] ?? ($input['action'] ?? 'set');
@@ -415,6 +438,7 @@ if ($action === 'save_state' && $method === 'POST') {
         mobi_json(['ok'=>false,'message'=>'Estado operacional inválido.'], 422);
     }
     mobi_require_fresh_state($pdo, $input);
+    $conflictDetail = mobi_state_conflict_detail();
     $before = mobi_state_token($pdo);
     mobi_save_real_state($pdo, mobi_decode_state(mobi_json_payload($state)), $user);
     $afterSave = mobi_state_token($pdo);
@@ -423,10 +447,17 @@ if ($action === 'save_state' && $method === 'POST') {
         'solicitations' => is_array($state['solicitations'] ?? null) ? count($state['solicitations']) : 0,
         'trainingMatrix' => is_array($state['trainingMatrix'] ?? null) ? count($state['trainingMatrix']) : 0,
         'before_token' => $before,
-        'after_save_token' => $afterSave
+        'after_save_token' => $afterSave,
+        'token_conflict' => $conflictDetail
     ]);
     $finalToken = mobi_state_token($pdo);
-    mobi_json(['ok'=>true,'real_tables'=>true,'token'=>$finalToken]);
+    mobi_json([
+        'ok'=>true,
+        'real_tables'=>true,
+        'token'=>$finalToken,
+        'merge_warning'=>$conflictDetail ? true : false,
+        'conflict_detail'=>$conflictDetail
+    ]);
 }
 
 if ($action === 'set' && $method === 'POST') {
@@ -436,8 +467,9 @@ if ($action === 'set' && $method === 'POST') {
     if (strlen($value) > 16 * 1024 * 1024) mobi_json(['ok'=>false,'message'=>'Registro muito grande para sincronizar.'], 413);
     if ($key === MOBI_STATE_KEY) {
         mobi_require_fresh_state($pdo, $input);
+        $conflictDetail = mobi_state_conflict_detail();
         mobi_save_real_state($pdo, mobi_decode_state($value), $user);
-        mobi_json(['ok'=>true,'real_tables'=>true,'token'=>mobi_state_token($pdo)]);
+        mobi_json(['ok'=>true,'real_tables'=>true,'token'=>mobi_state_token($pdo),'merge_warning'=>$conflictDetail ? true : false,'conflict_detail'=>$conflictDetail]);
     }
     $stmt = $pdo->prepare('INSERT INTO app_store (store_key, store_value, updated_by, ativo, excluido_em) VALUES (?,?,?,1,NULL) ON DUPLICATE KEY UPDATE store_value=VALUES(store_value), updated_by=VALUES(updated_by), updated_at=CURRENT_TIMESTAMP, ativo=1, excluido_em=NULL');
     $stmt->execute([$key, $value, $user['cpf'] ?? null]);

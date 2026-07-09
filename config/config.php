@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 return [
     'app_name' => 'MobilizaPro',
-    'app_version' => '1.13 Ajuste Visual Hostinger',
+    'app_version' => '1.23 Professional Core Operacional',
     'base_url' => '',
     'db' => [
         'host' => 'localhost',

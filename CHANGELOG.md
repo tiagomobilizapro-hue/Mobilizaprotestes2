@@ -182,3 +182,39 @@
 - Em novos candidatos, se o navegador não mandar o recrutador, o backend grava o usuário logado como recrutador.
 - Adicionado patch frontend `assets/js/34-recrutador-gravado-candidato-20260708.js` carregado por último.
 - Incluída migração `database/migrations/121_recrutador_candidato.sql`.
+
+
+## v122 — Professional Core (2026-07-09)
+
+- Adicionado painel executivo com filtros globais por obra, função, recrutador, status e período.
+- Adicionados módulos Contratos, Documentos e Auditoria.
+- Adicionado ranking de produtividade por recrutador no dashboard.
+- Adicionados indicadores de governança de dados.
+- Criadas estruturas SQL para `contratos_operacionais` e `documentos_mobilizacao`.
+- Melhorado o comportamento de conflito multiusuário: divergência de token é registrada e mesclada quando o fluxo cross-browser já consolidou servidor + navegador.
+- Expostos `CANDIDATES` e `SOLICITATIONS` em `window` para compatibilidade com patches funcionais posteriores.
+
+## v123 — Professional Core Operacional (2026-07-09)
+
+- Contratos/Obras deixam de ser apenas visão consolidada e passam a ter cadastro real no MySQL.
+- Documentos/Mobilização deixam de ser apenas painel derivado e passam a ter registro real por candidato.
+- Adicionada matriz de Usuários e Permissões por perfil operacional.
+- Adicionada tela de Relatórios Executivos com exportação CSV.
+- Ampliada `api/professional.php` com endpoints de contratos, documentos, permissões, relatórios e auditoria.
+- Criada migração `database/migrations/123_professional_core_operacional.sql`.
+- Mantida exclusão lógica/inativação, sem `DROP`, `TRUNCATE` ou `DELETE` operacional.
+
+
+## v124 — Banca Técnica Aplicada (09/07/2026)
+
+- Adicionada página **Banca Técnica** com matriz de 15 especialidades, evidências e pendências.
+- Adicionado endpoint `technical_board` em `api/professional.php`.
+- Transformada a matriz de permissões em controle persistido no MySQL.
+- Adicionada ação `save_permission` para alterar permissões por perfil/módulo.
+- APIs críticas de contratos, documentos, auditoria e permissões agora validam permissão por módulo.
+- Corrigida dependência de auditoria da API Professional: `mobi_audit` agora tem fallback próprio.
+- Adicionada migration `124_banca_tecnica_permissoes.sql`.
+- Adicionada tabela de apoio `homologacao_tecnica` para futuras evidências de homologação.
+- Validação estática executada em PHP e JavaScript.
+
+Nota: esta é uma revisão técnica estruturada; não representa banca humana externa nem substitui homologação real no servidor.

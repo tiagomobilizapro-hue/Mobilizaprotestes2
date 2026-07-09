@@ -355,9 +355,16 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
     mobi_add_columns($pdo, 'solicitacoes_mo', [
         'turno' => "VARCHAR(12) NOT NULL DEFAULT 'DIURNO'",
+        'prioridade' => "VARCHAR(20) NOT NULL DEFAULT 'NORMAL'",
+        'responsavel_nome' => 'VARCHAR(120) NULL',
+        'contrato_codigo' => 'VARCHAR(40) NULL',
+        'sla_limite_em' => 'DATE NULL',
+        'payload_hash' => 'CHAR(40) NULL',
         'ativo' => 'TINYINT(1) NOT NULL DEFAULT 1',
         'excluido_em' => 'TIMESTAMP NULL',
     ], $actions);
+    mobi_add_index($pdo, 'solicitacoes_mo', 'idx_solicitacoes_obra_rm', 'INDEX idx_solicitacoes_obra_rm (digital_obra, rm, ativo)', $actions, $warnings);
+    mobi_add_index($pdo, 'solicitacoes_mo', 'idx_solicitacoes_funcao', 'INDEX idx_solicitacoes_funcao (funcao, ativo)', $actions, $warnings);
 
     mobi_create_table($pdo, 'candidatos', "CREATE TABLE candidatos (
         id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -409,6 +416,11 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
         'payload_hash' => 'CHAR(40) NULL',
         'recrutador_nome' => 'VARCHAR(120) NULL',
         'recrutador_cpf' => 'VARCHAR(11) NULL',
+        'etapa_operacional' => 'VARCHAR(40) NULL',
+        'prioridade' => "VARCHAR(20) NOT NULL DEFAULT 'NORMAL'",
+        'responsavel_mobilizacao' => 'VARCHAR(120) NULL',
+        'contrato_codigo' => 'VARCHAR(40) NULL',
+        'sla_limite_em' => 'DATE NULL',
         'aso_marcado_em' => 'DATE NULL',
         'aso_alerta' => 'TINYINT(1) NOT NULL DEFAULT 0',
         'ativo' => 'TINYINT(1) NOT NULL DEFAULT 1',
@@ -429,6 +441,9 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
     }
     mobi_add_index($pdo, 'candidatos', 'uk_candidatos_client_uid', 'UNIQUE KEY uk_candidatos_client_uid (client_uid)', $actions, $warnings);
     mobi_add_index($pdo, 'candidatos', 'idx_candidatos_cpf_ativo', 'INDEX idx_candidatos_cpf_ativo (cpf, ativo)', $actions, $warnings);
+    mobi_add_index($pdo, 'candidatos', 'idx_candidatos_obra_rm', 'INDEX idx_candidatos_obra_rm (digital_obra, rm, ativo)', $actions, $warnings);
+    mobi_add_index($pdo, 'candidatos', 'idx_candidatos_recrutador', 'INDEX idx_candidatos_recrutador (recrutador_cpf, ativo)', $actions, $warnings);
+    mobi_add_index($pdo, 'candidatos', 'idx_candidatos_atualizado', 'INDEX idx_candidatos_atualizado (atualizado_em)', $actions, $warnings);
 
     mobi_create_table($pdo, 'training_matrix_store', "CREATE TABLE training_matrix_store (
         id TINYINT UNSIGNED NOT NULL PRIMARY KEY DEFAULT 1,
@@ -448,6 +463,94 @@ function mobi_upgrade_schema(PDO $pdo, bool $repairInitialAdmin = false): array
         INDEX idx_auditoria_tabela_chave (tabela, registro_chave),
         INDEX idx_auditoria_criado (criado_em)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
+
+    mobi_create_table($pdo, 'contratos_operacionais', "CREATE TABLE contratos_operacionais (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        codigo VARCHAR(40) NOT NULL,
+        nome VARCHAR(150) NOT NULL,
+        cliente VARCHAR(150) NULL,
+        centro_custo VARCHAR(80) NULL,
+        gestor_nome VARCHAR(120) NULL,
+        status VARCHAR(30) NOT NULL DEFAULT 'ATIVO',
+        payload JSON NULL,
+        criado_por VARCHAR(11) NULL,
+        atualizado_por VARCHAR(11) NULL,
+        criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        atualizado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        ativo TINYINT(1) NOT NULL DEFAULT 1,
+        UNIQUE KEY uk_contratos_codigo (codigo),
+        INDEX idx_contratos_status (status, ativo)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
+
+    mobi_create_table($pdo, 'documentos_mobilizacao', "CREATE TABLE documentos_mobilizacao (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        candidato_legacy_id INT UNSIGNED NULL,
+        candidato_uid VARCHAR(64) NULL,
+        tipo VARCHAR(80) NOT NULL,
+        status VARCHAR(30) NOT NULL DEFAULT 'PENDENTE',
+        validade_em DATE NULL,
+        enviado_em DATE NULL,
+        aprovado_em DATE NULL,
+        reprovado_em DATE NULL,
+        motivo_reprovacao VARCHAR(500) NULL,
+        arquivo_nome VARCHAR(190) NULL,
+        payload JSON NULL,
+        criado_por VARCHAR(11) NULL,
+        atualizado_por VARCHAR(11) NULL,
+        criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        atualizado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        ativo TINYINT(1) NOT NULL DEFAULT 1,
+        INDEX idx_documentos_candidato (candidato_uid, candidato_legacy_id, ativo),
+        INDEX idx_documentos_status (status, validade_em, ativo)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
+
+
+    mobi_create_table($pdo, 'permissoes_perfil', "CREATE TABLE permissoes_perfil (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        perfil VARCHAR(40) NOT NULL,
+        modulo VARCHAR(60) NOT NULL,
+        pode_visualizar TINYINT(1) NOT NULL DEFAULT 1,
+        pode_criar TINYINT(1) NOT NULL DEFAULT 0,
+        pode_editar TINYINT(1) NOT NULL DEFAULT 0,
+        pode_excluir TINYINT(1) NOT NULL DEFAULT 0,
+        criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        atualizado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uk_permissoes_perfil_modulo (perfil, modulo)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
+
+
+    mobi_add_columns($pdo, 'permissoes_perfil', [
+        'atualizado_por' => 'VARCHAR(11) NULL',
+    ], $actions);
+
+    mobi_create_table($pdo, 'homologacao_tecnica', "CREATE TABLE homologacao_tecnica (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        versao VARCHAR(40) NOT NULL,
+        area VARCHAR(120) NOT NULL,
+        status VARCHAR(30) NOT NULL DEFAULT 'ATENÇÃO',
+        evidencia TEXT NULL,
+        proximo_passo TEXT NULL,
+        criado_por VARCHAR(11) NULL,
+        criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_homologacao_versao_status (versao, status),
+        INDEX idx_homologacao_criado (criado_em)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci", $actions);
+
+    try {
+        $seedPerms = [
+            ['GERENCIAL','dashboard',1,1,1,1], ['GERENCIAL','vagas',1,1,1,1], ['GERENCIAL','candidatos',1,1,1,1], ['GERENCIAL','mobilizacao',1,1,1,1], ['GERENCIAL','documentos',1,1,1,1], ['GERENCIAL','contratos',1,1,1,1], ['GERENCIAL','auditoria',1,0,0,0], ['GERENCIAL','usuarios',1,1,1,1], ['GERENCIAL','relatorios',1,0,0,0], ['GERENCIAL','banca_tecnica',1,0,0,0],
+            ['OPERACIONAL_RECRUTAMENTO','dashboard',1,0,0,0], ['OPERACIONAL_RECRUTAMENTO','vagas',1,0,1,0], ['OPERACIONAL_RECRUTAMENTO','candidatos',1,1,1,1], ['OPERACIONAL_RECRUTAMENTO','mobilizacao',1,0,0,0], ['OPERACIONAL_RECRUTAMENTO','documentos',1,0,1,0], ['OPERACIONAL_RECRUTAMENTO','contratos',1,0,0,0], ['OPERACIONAL_RECRUTAMENTO','auditoria',1,0,0,0], ['OPERACIONAL_RECRUTAMENTO','relatorios',1,0,0,0], ['OPERACIONAL_RECRUTAMENTO','banca_tecnica',1,0,0,0],
+            ['MOBILIZACAO','dashboard',1,0,0,0], ['MOBILIZACAO','vagas',1,0,0,0], ['MOBILIZACAO','candidatos',1,0,1,0], ['MOBILIZACAO','mobilizacao',1,1,1,1], ['MOBILIZACAO','documentos',1,1,1,1], ['MOBILIZACAO','contratos',1,0,0,0], ['MOBILIZACAO','auditoria',1,0,0,0], ['MOBILIZACAO','relatorios',1,0,0,0], ['MOBILIZACAO','banca_tecnica',1,0,0,0],
+            ['MEDICINA','dashboard',1,0,0,0], ['MEDICINA','vagas',1,0,0,0], ['MEDICINA','candidatos',1,0,0,0], ['MEDICINA','mobilizacao',1,0,0,0], ['MEDICINA','documentos',1,0,1,0], ['MEDICINA','contratos',1,0,0,0], ['MEDICINA','relatorios',1,0,0,0], ['MEDICINA','banca_tecnica',1,0,0,0],
+            ['OBRA','dashboard',1,0,0,0], ['OBRA','vagas',1,1,1,0], ['OBRA','candidatos',1,0,0,0], ['OBRA','mobilizacao',1,0,0,0], ['OBRA','documentos',1,0,0,0], ['OBRA','contratos',1,0,0,0], ['OBRA','relatorios',1,0,0,0], ['OBRA','banca_tecnica',1,0,0,0],
+            ['ALOJAMENTO','dashboard',1,0,0,0], ['ALOJAMENTO','candidatos',1,0,0,0], ['ALOJAMENTO','mobilizacao',1,0,0,0], ['ALOJAMENTO','documentos',1,0,0,0], ['ALOJAMENTO','contratos',1,0,0,0], ['ALOJAMENTO','relatorios',1,0,0,0], ['ALOJAMENTO','banca_tecnica',1,0,0,0]
+        ];
+        $permStmt = $pdo->prepare('INSERT IGNORE INTO permissoes_perfil (perfil, modulo, pode_visualizar, pode_criar, pode_editar, pode_excluir) VALUES (?,?,?,?,?,?)');
+        foreach ($seedPerms as $perm) $permStmt->execute($perm);
+        $actions[] = 'Permissões por perfil: matriz padrão verificada.';
+    } catch (Throwable $error) {
+        $warnings[] = 'Matriz de permissões não foi atualizada: ' . $error->getMessage();
+    }
 
     mobi_create_table($pdo, 'app_store', "CREATE TABLE app_store (
         store_key VARCHAR(190) NOT NULL PRIMARY KEY,

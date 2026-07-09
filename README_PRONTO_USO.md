@@ -23,3 +23,7 @@
 ## Observacao de seguranca
 
 Se a senha real do banco apareceu em ZIPs, prints ou mensagens, troque-a no hPanel/Hostinger e atualize config/config.php com a nova senha.
+
+## Novidade v124
+
+A v124 adiciona o menu **Banca Técnica** e reforça o menu **Permissões**. A validação por 15 especialidades é uma matriz técnica interna do sistema; ela não substitui homologação real com usuários no servidor.

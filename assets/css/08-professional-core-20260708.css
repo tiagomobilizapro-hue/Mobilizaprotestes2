@@ -1,0 +1,153 @@
+/* MobilizaPRO v122 Professional Core */
+:root {
+  --mobi-pro-card: rgba(15, 23, 42, .72);
+  --mobi-pro-line: rgba(148, 163, 184, .22);
+  --mobi-pro-glow: rgba(96, 165, 250, .18);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(59, 130, 246, .14), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgba(14, 165, 233, .10), transparent 28%),
+    linear-gradient(135deg, rgba(15, 23, 42, .16), transparent 45%);
+  z-index: 0;
+}
+
+main, aside, header { position: relative; z-index: 1; }
+
+.mobi-pro-shell {
+  border: 1px solid var(--mobi-pro-line);
+  background: linear-gradient(145deg, rgba(15, 23, 42, .94), rgba(8, 17, 31, .82));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255, 255, 255, .05);
+  backdrop-filter: blur(14px);
+}
+
+.mobi-pro-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.mobi-pro-hero::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -220px;
+  top: -260px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--mobi-pro-glow), transparent 68%);
+}
+
+.mobi-pro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 1px solid rgba(96, 165, 250, .28);
+  background: rgba(59, 130, 246, .10);
+  color: #bfdbfe;
+  border-radius: 999px;
+  padding: .35rem .65rem;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.mobi-pro-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+@media (min-width: 768px) {
+  .mobi-pro-filter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1280px) {
+  .mobi-pro-filter-grid { grid-template-columns: 1.2fr 1.2fr 1.2fr .9fr .9fr auto; }
+}
+
+.mobi-pro-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--outline);
+  margin-bottom: .35rem;
+}
+
+.mobi-pro-input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, .25) !important;
+  background: rgba(2, 6, 23, .45) !important;
+  color: var(--on-surface) !important;
+  border-radius: .85rem !important;
+  min-height: 42px;
+  font-size: 12px !important;
+  font-weight: 700;
+}
+
+.mobi-pro-input:focus {
+  border-color: rgba(96, 165, 250, .65) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .18) !important;
+}
+
+.mobi-pro-stat {
+  border: 1px solid rgba(148, 163, 184, .18);
+  background: rgba(15, 23, 42, .58);
+  border-radius: 1rem;
+  padding: 1rem;
+}
+
+.mobi-pro-stat-value {
+  font-family: Outfit, Inter, sans-serif;
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 900;
+  color: #93c5fd;
+}
+
+.mobi-pro-table th {
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--outline);
+}
+
+.mobi-pro-table td, .mobi-pro-table th {
+  padding: .85rem 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, .12);
+}
+
+.mobi-pro-nav-badge {
+  margin-left: auto;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 165, 250, .22);
+  background: rgba(96, 165, 250, .10);
+  color: #bfdbfe;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+#mobi-pro-identity {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+/* v123 Professional Core Operacional */
+#mobi-v123-contract-form,
+#mobi-v123-doc-form { position: sticky; top: 88px; align-self: start; }
+#mobi-v123-contract-form textarea,
+#mobi-v123-doc-form textarea { resize: vertical; }
+.mobi-pro-table td .btn { min-height: 30px; }
+@media (max-width: 1279px) {
+  #mobi-v123-contract-form,
+  #mobi-v123-doc-form { position: static; }
+}

@@ -41,3 +41,15 @@ Nunca apague o banco e nunca execute DROP TABLE. Esta release foi preparada para
 - não altera o design.
 
 Se o relatório apresentar aviso sobre CPF duplicado, não remova registros às cegas. Analise o backup e corrija os duplicados manualmente.
+
+## Atualização v124 — Banca Técnica Aplicada
+
+Após enviar os arquivos da v124 ao servidor, execute uma vez:
+
+```text
+/database/upgrade.php
+```
+
+A atualização é incremental e não apaga registros existentes. Ela reforça a matriz `permissoes_perfil`, adiciona o módulo `banca_tecnica`, prepara a tabela `homologacao_tecnica` e mantém exclusões operacionais como inativação lógica.
+
+Depois de testar, remova ou bloqueie os arquivos de instalação/upgrade do ambiente público.
